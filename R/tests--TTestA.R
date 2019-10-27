@@ -48,6 +48,8 @@
 #' \item{null.value}{the specified hypothesized value of the mean or mean 
 #'       difference depending on whether it was a one-sample test or a 
 #'       two-sample test.}
+#' \item{stderr}{the standard error of the mean (difference), used as 
+#'       denominator in the t-statistic formula.}
 #' \item{alternative}{a character string describing the alternative hypothesis.}
 #' \item{method}{a character string indicating what type of t-test was 
 #'       performed.}
