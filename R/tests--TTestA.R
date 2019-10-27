@@ -20,37 +20,32 @@
 #' @param my an optional single number representing the sample mean of y.
 #' @param sx a single number representing the sample standard deviation of x.
 #' @param sy an optional single number representing the sample standard
-#' deviation of y.
+#'        deviation of y.
 #' @param nx a single number representing the sample size of x.
 #' @param ny an optional single number representing the sample size of y.
 #' @param alternative a character string specifying the alternative hypothesis,
-#' must be one of \code{"two.sided"} (default), \code{"greater"} or
-#' \code{"less"}.  You can specify just the initial letter.
+#'        must be one of \code{"two.sided"} (default), \code{"greater"} or
+#'        \code{"less"}.  You can specify just the initial letter.
 #' @param mu a number indicating the true value of the mean (or difference in
-#' means if you are performing a two sample test).
+#'        means if you are performing a two sample test).
 #' @param paired a logical indicating whether you want a paired t-test.
 #' @param var.equal a logical variable indicating whether to treat the two
-#' variances as being equal. If \code{TRUE} then the pooled variance is used to
-#' estimate the variance otherwise the Welch (or Satterthwaite) approximation
-#' to the degrees of freedom is used.
+#'        variances as being equal. If \code{TRUE} then the pooled variance is 
+#'        used to estimate the variance otherwise the Welch (or Satterthwaite) 
+#'        approximation to the degrees of freedom is used.
 #' @param conf.level confidence level of the interval.
 #' @param \dots further arguments to be passed to or from methods.
+#' 
 #' @return A list with class \code{"htest"} containing the following
 #' components: 
 #' \item{statistic}{the value of the t-statistic.}
 #' \item{parameter}{the degrees of freedom for the t-statistic.}
 #' \item{p.value}{the p-value for the test.} 
-#' \item{conf.int}{a confidence
-#' interval for the mean appropriate to the specified alternative hypothesis.}
-#' \item{estimate}{the estimated mean or difference in means depending on
-#' whether it was a one-sample test or a two-sample test.}
-#' \item{null.value}{the specified hypothesized value of the mean or mean
-#' difference depending on whether it was a one-sample test or a two-sample
-#' test.} 
-#' \item{alternative}{a character string describing the alternative
-#' hypothesis.} 
-#' \item{method}{a character string indicating what type of t-test was 
-#' performed.} 
+#' \item{conf.int}{a confidence interval for the mean appropriate to the specified alternative hypothesis.}
+#' \item{estimate}{the estimated mean or difference in means depending on whether it was a one-sample test or a two-sample test.}
+#' \item{null.value}{the specified hypothesized value of the mean or mean difference depending on whether it was a one-sample test or a two-sample test.} 
+#' \item{alternative}{a character string describing the alternative hypothesis.} 
+#' \item{method}{a character string indicating what type of t-test was performed.} 
 #' \item{data.name}{a character string giving the name(s) of the data.}
 #' 
 #' @seealso 
@@ -67,7 +62,7 @@
 #' sx <- 1.789010
 #' sy <- 2.002249
 #' nx <- ny <- 10
-#' TTestA(mx=mx, my=my, sx=sx, sy=sy, nx=nx, ny=ny)
+#' TTestA(mx = mx, my = my, sx = sx, sy = sy, nx = nx, ny = ny)
 #' 
 #' # compare to
 #' with(sleep, t.test(extra[group == 1], extra[group == 2]))
