@@ -1,6 +1,6 @@
 context("Tests: TTestA()")
 
-test_that("multiplication works", {
+test_that("TTestA() works", {
   # Prepare data
   x = with(sleep, extra[group == 1])
   y = with(sleep, extra[group == 2])
@@ -18,8 +18,10 @@ test_that("multiplication works", {
   expect_error(TTestA(1, 1))
   expect_error(TTestA(1, 1, 1))
   
-  expect_is(TTestA(1, 1, 10), class = "htest")
-  expect_length(TTestA(1, 1, 10), n = 10)
+  my_rez <- TTestA(1, 1, 10)
+  expect_is(my_rez, class = "htest")
+  expect_length(my_rez, n = 10)
+  expect_named(my_rez, names(t.test(x)))
   
   expect_identical(
     TTestA(mx = mx, sx = sx, nx = nx), 
