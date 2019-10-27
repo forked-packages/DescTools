@@ -5651,8 +5651,8 @@ CochranArmitageTest <- function(x, alternative = c("two.sided","increasing","dec
 #' 
 #' Trujillo-Ortiz, A., R. Hernandez-Walls, A. Castro-Perez, L.
 #' Rodriguez-Cardozo N.A. Ramos-Delgado and R. Garcia-Sanchez. (2004).
-#' Barnardextest:Barnard's Exact Probability Test. A MATLAB file. [WWW
-#' document]. \url{http://www.mathworks.com/}
+#' Barnardextest:Barnard's Exact Probability Test. A MATLAB file. 
+#' [WWW document]. \url{http://www.mathworks.com/}
 #' 
 #' @keywords nonparametric htest
 #'
