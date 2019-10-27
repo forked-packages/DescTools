@@ -36,8 +36,8 @@
 #' @param conf.level confidence level of the interval.
 #' @param \dots further arguments to be passed to or from methods.
 #'
-#' @return A list with class \code{"htest"} containing the following
-#' components:
+#' @return 
+#' A list with class \code{"htest"} containing the following components:
 #' \item{statistic}{the value of the t-statistic.}
 #' \item{parameter}{the degrees of freedom for the t-statistic.}
 #' \item{p.value}{the p-value for the test.}
@@ -59,7 +59,6 @@
 #' \code{\link{t.test}}
 #'
 #' @keywords htest
-#'
 #'
 #' @examples
 #'
