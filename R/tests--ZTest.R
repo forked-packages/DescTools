@@ -18,47 +18,46 @@
 #' 
 #' @aliases ZTest ZTest.default ZTest.formula
 #' @param x numeric vector of data values. Non-finite (e.g. infinite or
-#' missing) values will be omitted.
+#'        missing) values will be omitted.
 #' @param y an optional numeric vector of data values: as with x non-finite
-#' values will be omitted.
+#'        values will be omitted.
 #' @param mu a number specifying the hypothesized mean of the population.
 #' @param sd_pop a number specifying the known standard deviation of the
-#' population.
+#'        population.
 #' @param alternative a character string specifying the alternative hypothesis,
-#' must be one of \code{"two.sided"} (default), \code{"greater"} or
-#' \code{"less"}.  You can specify just the initial letter. \cr
-#' For one-sample
-#' tests, \code{alternative} refers to the true mean of the parent population
-#' in relation to the hypothesized value of the mean.
+#'        must be one of \code{"two.sided"} (default), \code{"greater"} or
+#'        \code{"less"}.You can specify just the initial letter. \cr
+#'        For one-sample tests, \code{alternative} refers to the true mean of 
+#'        the parent population in relation to the hypothesized value of the 
+#'        mean.
 #' @param paired a logical indicating whether you want a paired z-test.
 #' @param conf.level confidence level for the interval computation.
 #' @param formula a formula of the form \code{lhs ~ rhs} where \code{lhs} gives
-#' the data values and \code{rhs} a factor with two levels giving the
-#' corresponding groups.
+#'        the data values and \code{rhs} a factor with two levels giving the
+#'        corresponding groups.
 #' @param data an optional matrix or data frame (or similar: see
-#' \code{\link{model.frame}}) containing the variables in the formula
-#' \code{formula}.  By default the variables are taken from
-#' \code{environment(formula)}.
+#'        \code{\link{model.frame}}) containing the variables in the formula
+#'        \code{formula}. By default the variables are taken from
+#'        \code{environment(formula)}.
 #' @param subset an optional vector specifying a subset of observations to be
-#' used.
+#'        used.
 #' @param na.action a function which indicates what should happen when the data
-#' contain \code{NA}s. Defaults to \code{getOption("na.action")}.
+#'        contain \code{NA}s. Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
-#' @return A list with class "\code{htest}" containing the following
-#' components:
+#' 
+#' @return 
+#' A list with class "\code{htest}" containing the following components:
 #' \item{statistic}{ the value of the z-statistic.} 
 #' \item{p.value}{the p-value for the test} 
-#' \item{conf.int}{a confidence interval for the mean
-#' appropriate to the specified alternative hypothesis.}
+#' \item{conf.int}{a confidence interval for the mean appropriate to the 
+#'       specified alternative hypothesis.}
 #' \item{estimate}{the estimated mean or difference in means depending on 
-#' whether it was a one-sample test or a two-sample test.} 
-#' \item{null.value}{the specified
-#' hypothesized value of the mean or mean difference depending on whether it
-#' was a one-sample test or a two-sample test.} 
-#' \item{alternative}{a character
-#' string describing the alternative hypothesis.} 
-#' \item{method}{ a character
-#' string indicating what type of test was performed.} 
+#'       whether it was a one-sample test or a two-sample test.} 
+#' \item{null.value}{the specified hypothesized value of the mean or mean 
+#'       difference depending on whether it was a one-sample test or a 
+#'       two-sample test.} 
+#' \item{alternative}{a character string describing the alternative hypothesis.} 
+#' \item{method}{a character string indicating what type of test was performed.} 
 #' \item{data.name}{a character string giving the name(s) of the data.}
 #' 
 #' @author 
@@ -79,25 +78,29 @@
 #' @examples
 #' 
 #' x <- rnorm(25, 100, 5)
-#' ZTest(x, mu=99, sd_pop=5)
+#' ZTest(x, mu = 99, sd_pop = 5)
 #' 
 #' # the classic interface
-#' with(sleep, ZTest(extra[group == 1], extra[group == 2], sd_pop=2))
+#' with(sleep, ZTest(extra[group == 1], extra[group == 2], sd_pop = 2))
 #' 
 #' # the formula interface
-#' ZTest(extra ~ group, data = sleep, sd_pop=2)
+#' ZTest(extra ~ group, data = sleep, sd_pop = 2)
 #' 
 #' 
 #' # Stahel (2002), pp. 186, 196
-#' 
-#' d.tyres <- data.frame(A=c(44.5,55,52.5,50.2,45.3,46.1,52.1,50.5,50.6,49.2),
-#'                       B=c(44.9,54.8,55.6,55.2,55.6,47.7,53,49.1,52.3,50.7))
-#' with(d.tyres, ZTest(A, B, sd_pop=3, paired=TRUE))
-#' 
-#' 
-#' d.oxen <- data.frame(ext=c(2.7,2.7,1.1,3.0,1.9,3.0,3.8,3.8,0.3,1.9,1.9),
-#'                      int=c(6.5,5.4,8.1,3.5,0.5,3.8,6.8,4.9,9.5,6.2,4.1))
-#' with(d.oxen, ZTest(int, ext, sd_pop=1.8, paired=FALSE))
+#'
+#' d.tyres <- data.frame(
+#'     A = c(44.5, 55, 52.5, 50.2, 45.3, 46.1, 52.1, 50.5, 50.6, 49.2), 
+#'     B = c(44.9, 54.8, 55.6, 55.2, 55.6, 47.7, 53, 49.1, 52.3, 50.7)
+#' )
+#' with(d.tyres, ZTest(A, B, sd_pop = 3, paired = TRUE))
+#'
+#'
+#' d.oxen <- data.frame(
+#'     ext = c(2.7, 2.7, 1.1, 3.0, 1.9, 3.0, 3.8, 3.8, 0.3, 1.9, 1.9), 
+#'     int = c(6.5, 5.4, 8.1, 3.5, 0.5, 3.8, 6.8, 4.9, 9.5, 6.2, 4.1)
+#' )
+#' with(d.oxen, ZTest(int, ext, sd_pop = 1.8, paired = FALSE))
 #' 
 ZTest <- function(x, ...) {
   UseMethod("ZTest")
