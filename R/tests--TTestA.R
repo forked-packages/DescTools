@@ -74,7 +74,7 @@
 #' # compare to
 #' with(sleep, t.test(extra[group == 1], extra[group == 2]))
 #'
-#' # @export
+
 TTestA <- function(mx, sx, nx, my = NULL, sy = NULL, ny = NULL,
   alternative = c("two.sided", "less", "greater"), mu = 0, paired = FALSE, 
   var.equal = FALSE, conf.level = 0.95, ...) 
