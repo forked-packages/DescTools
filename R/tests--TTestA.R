@@ -138,8 +138,7 @@ TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
       stderr <- sqrt(stderrx^2 + stderry^2)
       df <- stderr^4/(stderrx^4/(nx - 1) + stderry^4/(ny - 1))
     }
-    if (stderr < 10 * .Machine$double.eps * max(abs(mx),
-                                                abs(my)))
+    if (stderr < 10 * .Machine$double.eps * max(abs(mx), abs(my)))
       stop("data are essentially constant")
     tstat <- (mx - my - mu)/stderr
   }
@@ -165,7 +164,7 @@ TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
   else "mean"
   attr(cint, "conf.level") <- conf.level
   rval <- list(statistic = tstat, parameter = df, p.value = pval,
-               conf.int = cint, estimate = estimate, null.value = mu,
+               conf.int = cint, estimate = estimate, null.value = mu, stderr = stderr,
                alternative = alternative, method = method, data.name = dname)
   class(rval) <- "htest"
   return(rval)
