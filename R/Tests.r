@@ -242,13 +242,14 @@
 #' d.oxen <- data.frame(ext=c(2.7,2.7,1.1,3.0,1.9,3.0,3.8,3.8,0.3,1.9,1.9),
 #'                      int=c(6.5,5.4,8.1,3.5,0.5,3.8,6.8,4.9,9.5,6.2,4.1))
 #' with(d.oxen, YuenTTest(int, ext, paired=FALSE))
-#' @export
+
+# @export
 YuenTTest <- function(x, ...) {
   UseMethod("YuenTTest")
 }
 
-#' @rdname YuenTTest
-#' @export
+# @rdname YuenTTest
+# @export
 YuenTTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || 
@@ -275,8 +276,8 @@ YuenTTest.formula <- function(formula, data, subset, na.action, ...) {
   y
 }
 
-#' @rdname YuenTTest
-#' @export
+# @rdname YuenTTest
+# @export
 YuenTTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
                                mu = 0, paired = FALSE, conf.level = 0.95, trim = 0.2, ...) {
 
@@ -460,7 +461,6 @@ YuenTTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", 
 #' \code{\link{t.test}}
 #' 
 #' @keywords htest
-#' @export
 #'
 #'
 #' @examples
@@ -475,6 +475,8 @@ YuenTTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", 
 #' 
 #' # compare to
 #' with(sleep, t.test(extra[group == 1], extra[group == 2]))
+
+# @export
 
 TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
                      alternative = c("two.sided", "less", "greater"),
@@ -664,7 +666,6 @@ TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
 #' Wiley, New York.
 #' 
 #' @keywords htest
-#' @export
 #'
 #'
 #' @examples
@@ -705,12 +706,15 @@ TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
 #' 
 #' SignTest(x - y)
 #' 
+
+# @export
+
 SignTest <- function(x, ...) {
   UseMethod("SignTest")
 }
 
-#' @rdname SignTest
-#' @export
+# @rdname SignTest
+# @export
 SignTest.formula <- function(formula, data, subset, na.action, ...) {
 
   # this is designed just like wilcox.test.formula
@@ -741,8 +745,8 @@ SignTest.formula <- function(formula, data, subset, na.action, ...) {
 # test:
 #  cbind( c(NA,sort(x)), 0:n, dbinom(0:n, size=n, prob=0.5),  pbinom(0:n, size=n, prob=0.5))
 
-#' @rdname SignTest
-#' @export
+# @rdname SignTest
+# @export
 SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
                              mu = 0, conf.level = 0.95, ...) {
 
