@@ -41,11 +41,16 @@
 #' \item{statistic}{the value of the t-statistic.}
 #' \item{parameter}{the degrees of freedom for the t-statistic.}
 #' \item{p.value}{the p-value for the test.}
-#' \item{conf.int}{a confidence interval for the mean appropriate to the specified alternative hypothesis.}
-#' \item{estimate}{the estimated mean or difference in means depending on whether it was a one-sample test or a two-sample test.}
-#' \item{null.value}{the specified hypothesized value of the mean or mean difference depending on whether it was a one-sample test or a two-sample test.}
+#' \item{conf.int}{a confidence interval for the mean appropriate to the 
+#'       specified alternative hypothesis.}
+#' \item{estimate}{the estimated mean or difference in means depending on 
+#'       whether it was a one-sample test or a two-sample test.}
+#' \item{null.value}{the specified hypothesized value of the mean or mean 
+#'       difference depending on whether it was a one-sample test or a 
+#'       two-sample test.}
 #' \item{alternative}{a character string describing the alternative hypothesis.}
-#' \item{method}{a character string indicating what type of t-test was performed.}
+#' \item{method}{a character string indicating what type of t-test was 
+#'       performed.}
 #' \item{data.name}{a character string giving the name(s) of the data.}
 #'
 #' @seealso
