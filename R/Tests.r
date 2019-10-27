@@ -1,6 +1,7 @@
-## stats: tests ====
+## stats: tests ==============================================================
 
 
+#### TODO *************************
 #### ******************************
 #### ******TODO*TODO***************
 #### ******xxxxxxxxx***************
@@ -28,14 +29,14 @@
 # side<-as.logical(side)
 # p.value<-NA
 # yuenbt<-vector(mode="numeric",length=2)
-# if(SEED)set.seed(2) # set seed of random number generator so that
+# if (SEED)set.seed(2) # set seed of random number generator so that
 # #             results can be duplicated.
 # x<-x[!is.na(x)]  # Remove missing values in x
 # y<-y[!is.na(y)]  # Remove missing values in y
 # xcen<-x-mean(x,tr)
 # ycen<-y-mean(y,tr)
-# if(!side){
-#   if(pr)print("NOTE: p-value computed only when side=T")
+# if (!side) {
+#   if (pr)print("NOTE: p-value computed only when side=T")
 # }
 # test<-(mean(x,tr)-mean(y,tr))/sqrt(trimse(x,tr=tr)^2+trimse(y,tr=tr)^2)
 # datax<-matrix(sample(xcen,size=length(x)*nboot,replace=TRUE),nrow=nboot)
@@ -44,13 +45,13 @@
 # botx<-apply(datax,1,trimse,tr)
 # boty<-apply(datay,1,trimse,tr)
 # tval<-top/sqrt(botx^2+boty^2)
-# if(plotit){
-#   if(op == 1)
+# if (plotit) {
+#   if (op == 1)
 #     akerd(tval)
-#   if(op == 2)
+#   if (op == 2)
 #     rdplot(tval)
 # }
-# if(side)tval<-abs(tval)
+# if (side)tval<-abs(tval)
 # tval<-sort(tval)
 # icrit<-floor((1-alpha)*nboot+.5)
 # ibot<-floor(alpha*nboot/2+.5)
@@ -58,7 +59,7 @@
 # se<-sqrt((trimse(x,tr))^2+(trimse(y,tr))^2)
 # yuenbt[1]<-mean(x,tr)-mean(y,tr)-tval[itop]*se
 # yuenbt[2]<-mean(x,tr)-mean(y,tr)-tval[ibot]*se
-# if(side){
+# if (side) {
 #   yuenbt[1]<-mean(x,tr)-mean(y,tr)-tval[icrit]*se
 #   yuenbt[2]<-mean(x,tr)-mean(y,tr)+tval[icrit]*se
 #   p.value<-(sum(abs(test)<=abs(tval)))/nboot
@@ -70,13 +71,13 @@
 
 # getAnywhere(t.test.default)
 #
-# function (x, y = NULL, alternative = c("two.sided", "less", "greater"),
+# function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
 #           mu = 0, paired = FALSE, var.equal = FALSE, conf.level = 0.95,
 #           trim = 0, nboot = 599, na.rm = FALSE
 #           ...)
 
-.YuenTTestB <- function(x, y, trim = 0, conf.level = 0.95, nboot=599
-                        , alternative = c("two.sided", "less", "greater"), mu = 0, na.rm = FALSE){
+.YuenTTestB <- function(x, y, trim = 0, conf.level = 0.95, nboot=599,
+  alternative = c("two.sided", "less", "greater"), mu = 0, na.rm = FALSE) {
 
 
   TrimSE <- function(x, trim = 0, na.rm = FALSE) {
@@ -84,7 +85,7 @@
     #  Estimate the standard error of the gamma trimmed mean
     #  The default amount of trimming is trim = 0.2
 
-    if(na.rm) x <- na.omit(x)
+    if (na.rm) x <- na.omit(x)
 
     winvar <- var(Winsorize(x, probs = c(trim, 1-trim)))
 
@@ -97,8 +98,8 @@
   method <- "Yuen Two Sample bootstrap t-test"
   dname <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
 
-  if(na.rm) x <- na.omit(x)
-  if(na.rm) y <- na.omit(y)
+  if (na.rm) x <- na.omit(x)
+  if (na.rm) y <- na.omit(y)
 
   meanx <- mean(x, trim = trim)
   meany <- mean(y, trim = trim)
@@ -117,7 +118,7 @@
   alpha <- 1 - conf.level
   se <- sqrt((TrimSE(x, trim = trim))^2 + (TrimSE(y, trim = trim))^2)
 
-  if(alternative == "two.sided") {
+  if (alternative == "two.sided") {
     tval <- abs(tval)
     icrit <- floor((1 - alpha) * nboot + .5)
     cint <- meanx - meany + c(-1, 1) * tval[icrit] * se
@@ -182,27 +183,44 @@
 #' @param na.action a function which indicates what should happen when the data
 #' contain NAs. Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
+#' 
 #' @return An object of class \code{htest} containing the following components:
-#' \item{statistic}{the value of the t-statistic.} \item{parameter}{the degrees
+#' \item{statistic}{the value of the t-statistic.} 
+#' \item{parameter}{the degrees
 #' of freedom for the t-statistic and the trim percentage used.}
-#' \item{p.value}{the p-value for the test.} \item{conf.int}{a confidence
+#' \item{p.value}{the p-value for the test.} 
+#' \item{conf.int}{a confidence
 #' interval for the trimmed mean appropriate to the specified alternative
-#' hypothesis.} \item{estimate}{the estimated trimmed mean or difference in
+#' hypothesis.} 
+#' \item{estimate}{the estimated trimmed mean or difference in
 #' trimmed means depending on whether it was a one-sample test or a two-sample
-#' test. } \item{null.value}{the specified hypothesized value of the trimmed
+#' test. } 
+#' \item{null.value}{the specified hypothesized value of the trimmed
 #' mean or trimmed mean difference depending on whether it was a one-sample
-#' test or a two-sample test.} \item{alternative}{a character string describing
-#' the alternative hypothesis.} \item{method}{a character string indicating
-#' what type of test was performed.} \item{data.name}{a character string giving
+#' test or a two-sample test.} 
+#' \item{alternative}{a character string describing
+#' the alternative hypothesis.} 
+#' \item{method}{a character string indicating
+#' what type of test was performed.} 
+#' \item{data.name}{a character string giving
 #' the name(s) of the data.}
-#' @author Andri Signorell <andri@@signorell.net>, based on R-Core code of
-#' \code{\link{t.test}}
-#' @seealso \code{\link{t.test}}, \code{\link{print.htest}}
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>, 
+#' based on R-Core code of \code{\link{t.test}}
+#' 
+#' @seealso 
+#' \code{\link{t.test}}, 
+#' \code{\link{print.htest}}
+#' 
 #' @references Wilcox, R. R. (2005) Introduction to robust estimation and
-#' hypothesis testing. \emph{Academic Press}.\cr Yuen, K. K. (1974) The
+#' hypothesis testing. \emph{Academic Press}.\cr
+#' Yuen, K. K. (1974) The
 #' two-sample trimmed t for unequal population variances. \emph{Biometrika},
 #' 61, 165-170.
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' x <- rnorm(25, 100, 5)
@@ -224,15 +242,18 @@
 #' d.oxen <- data.frame(ext=c(2.7,2.7,1.1,3.0,1.9,3.0,3.8,3.8,0.3,1.9,1.9),
 #'                      int=c(6.5,5.4,8.1,3.5,0.5,3.8,6.8,4.9,9.5,6.2,4.1))
 #' with(d.oxen, YuenTTest(int, ext, paired=FALSE))
-#' 
-YuenTTest <- function (x, ...)
+#' @export
+YuenTTest <- function(x, ...) {
   UseMethod("YuenTTest")
+}
 
+#' @rdname YuenTTest
+#' @export
+YuenTTest.formula <- function(formula, data, subset, na.action, ...) {
 
-YuenTTest.formula <- function (formula, data, subset, na.action, ...)  {
-
-  if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
-                                                                  "term.labels")) != 1L))
+  if (missing(formula) || 
+      (length(formula) != 3L) || 
+      (length(attr(terms(formula[-2L]), "term.labels")) != 1L))
     stop("'formula' missing or incorrect")
   m <- match.call(expand.dots = FALSE)
   if (is.matrix(eval(m$data, parent.frame())))
@@ -254,8 +275,9 @@ YuenTTest.formula <- function (formula, data, subset, na.action, ...)  {
   y
 }
 
-
-YuenTTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "greater"),
+#' @rdname YuenTTest
+#' @export
+YuenTTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
                                mu = 0, paired = FALSE, conf.level = 0.95, trim = 0.2, ...) {
 
   alternative <- match.arg(alternative)
@@ -293,10 +315,13 @@ YuenTTest.default <- function (x, y = NULL, alternative = c("two.sided", "less",
 
     df <- nx - 2 * floor(trim * nx) - 1
 
-    if(paired){
+    if (paired) {
       my <- mean(y, trim = trim)
       vy <- var(Winsorize(y, probs = c(trim, 1-trim)))
-      covxy <- var(Winsorize(x, probs = c(trim, 1-trim)), Winsorize(y, probs = c(trim, 1-trim)))
+      covxy <- var(
+        Winsorize(x, probs = c(trim, 1-trim)), 
+        Winsorize(y, probs = c(trim, 1-trim))
+      )
       stderr <- sqrt( (nx-1) * (vx + vy - 2 * covxy) / ((df + 1) * df) )
     } else {
       stderr <- sqrt(vx) / ((1 - 2 * trim) * sqrt(nx))
@@ -305,7 +330,7 @@ YuenTTest.default <- function (x, y = NULL, alternative = c("two.sided", "less",
     if (stderr < 10 * .Machine$double.eps * abs(mx))
       stop("data are essentially constant")
 
-    if(paired){
+    if (paired) {
       method <- "Yuen Paired t-test"
       tstat <- (mx - my - mu) / stderr
       estimate <- setNames(mx - my, "difference of trimmed means")
@@ -414,20 +439,30 @@ YuenTTest.default <- function (x, y = NULL, alternative = c("two.sided", "less",
 #' @param conf.level confidence level of the interval.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the value of the t-statistic.}
+#' components: 
+#' \item{statistic}{the value of the t-statistic.}
 #' \item{parameter}{the degrees of freedom for the t-statistic.}
-#' \item{p.value}{the p-value for the test.} \item{conf.int}{a confidence
+#' \item{p.value}{the p-value for the test.} 
+#' \item{conf.int}{a confidence
 #' interval for the mean appropriate to the specified alternative hypothesis.}
 #' \item{estimate}{the estimated mean or difference in means depending on
 #' whether it was a one-sample test or a two-sample test.}
 #' \item{null.value}{the specified hypothesized value of the mean or mean
 #' difference depending on whether it was a one-sample test or a two-sample
-#' test.} \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{a character string indicating what type of t-test
-#' was performed.} \item{data.name}{a character string giving the name(s) of
-#' the data.}
-#' @seealso \code{\link{t.test}}
+#' test.} 
+#' \item{alternative}{a character string describing the alternative
+#' hypothesis.} 
+#' \item{method}{a character string indicating what type of t-test was 
+#' performed.} 
+#' \item{data.name}{a character string giving the name(s) of the data.}
+#' 
+#' @seealso 
+#' \code{\link{t.test}}
+#' 
 #' @keywords htest
+#' @export
+#'
+#'
 #' @examples
 #' 
 #' ## Classical example: Student's sleep data
@@ -440,8 +475,8 @@ YuenTTest.default <- function (x, y = NULL, alternative = c("two.sided", "less",
 #' 
 #' # compare to
 #' with(sleep, t.test(extra[group == 1], extra[group == 2]))
-#' 
-TTestA <- function (mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
+
+TTestA <- function(mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
                      alternative = c("two.sided", "less", "greater"),
           mu = 0, paired = FALSE, var.equal = FALSE, conf.level = 0.95,
           ...) {
@@ -592,29 +627,46 @@ TTestA <- function (mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
 #' @param na.action a function which indicates what should happen when the data
 #' contain NAs. Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
+#' 
 #' @return A list of class \code{htest}, containing the following components:
 #' \item{statistic}{ the S-statistic (the number of positive differences
 #' between the data and the hypothesized median), with names attribute
-#' \dQuote{S}.} \item{parameter}{ the total number of valid differences.}
-#' \item{p.value}{ the p-value for the test.} \item{null.value}{is the value of
+#' \dQuote{S}.} 
+#' \item{parameter}{ the total number of valid differences.}
+#' \item{p.value}{ the p-value for the test.} 
+#' \item{null.value}{is the value of
 #' the median specified by the null hypothesis. This equals the input argument
-#' \code{mu}. } \item{alternative}{a character string describing the
-#' alternative hypothesis.} \item{method}{ the type of test applied.}
+#' \code{mu}. } 
+#' \item{alternative}{a character string describing the alternative hypothesis.} 
+#' \item{method}{ the type of test applied.}
 #' \item{data.name}{a character string giving the names of the data.}
-#' \item{conf.int}{ a confidence interval for the median.} \item{estimate}{ the
-#' sample median.}
-#' @author Andri Signorell <andri@@signorell.net>
-#' @seealso \code{\link{t.test}}, \code{\link{wilcox.test}},
-#' \code{\link{ZTest}}, \code{\link{binom.test}}, \code{\link[BSDA]{SIGN.test}}
-#' in the package \pkg{BSDA} (reporting approximative confidence intervals).
-#' @references Gibbons, J.D. and Chakraborti, S. (1992): \emph{Nonparametric
+#' \item{conf.int}{ a confidence interval for the median.} 
+#' \item{estimate}{ the sample median.}
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>
+#' 
+#' @seealso 
+#' \code{\link{t.test}}, 
+#' \code{\link{wilcox.test}},
+#' \code{\link{ZTest}}, 
+#' \code{\link{binom.test}}, 
+#' \code{\link[BSDA]{SIGN.test}} in the package \pkg{BSDA} (reporting 
+#' approximative confidence intervals).
+#' 
+#' @references 
+#' Gibbons, J.D. and Chakraborti, S. (1992): \emph{Nonparametric
 #' Statistical Inference}. Marcel Dekker Inc., New York.
 #' 
 #' Kitchens, L. J. (2003): \emph{Basic Statistics and Data Analysis}. Duxbury.
 #' 
 #' Conover, W. J. (1980): \emph{Practical Nonparametric Statistics, 2nd ed}.
 #' Wiley, New York.
+#' 
 #' @keywords htest
+#' @export
+#'
+#'
 #' @examples
 #' 
 #' x <- c(1.83,  0.50,  1.62,  2.48, 1.68, 1.88, 1.55, 3.06, 1.30)
@@ -642,8 +694,8 @@ TTestA <- function (mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
 #' wilcox.test(x=d, mu = 4, conf.int = TRUE, alternative="greater")
 #' 
 #' # test die interfaces
-#' x <- runif(10)
-#' y <- runif(10)
+#' x <- runif (10)
+#' y <- runif (10)
 #' g <- rep(1:2, each=10) 
 #' xx <- c(x, y)
 #' 
@@ -653,9 +705,13 @@ TTestA <- function (mx, sx, nx, my=NULL, sy = NULL, ny=NULL,
 #' 
 #' SignTest(x - y)
 #' 
-SignTest <- function (x, ...)  UseMethod("SignTest")
+SignTest <- function(x, ...) {
+  UseMethod("SignTest")
+}
 
-SignTest.formula <- function (formula, data, subset, na.action, ...) {
+#' @rdname SignTest
+#' @export
+SignTest.formula <- function(formula, data, subset, na.action, ...) {
 
   # this is designed just like wilcox.test.formula
 
@@ -685,14 +741,16 @@ SignTest.formula <- function (formula, data, subset, na.action, ...) {
 # test:
 #  cbind( c(NA,sort(x)), 0:n, dbinom(0:n, size=n, prob=0.5),  pbinom(0:n, size=n, prob=0.5))
 
+#' @rdname SignTest
+#' @export
 SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
                              mu = 0, conf.level = 0.95, ...) {
 
   MedianCI_Binom <- function( x, conf.level = 0.95,
-                              alternative = c("two.sided", "less", "greater"), na.rm = FALSE ){
+                              alternative = c("two.sided", "less", "greater"), na.rm = FALSE ) {
     # http://www.stat.umn.edu/geyer/old03/5102/notes/rank.pdf
     # http://de.scribd.com/doc/75941305/Confidence-Interval-for-Median-Based-on-Sign-Test
-    if(na.rm) x <- na.omit(x)
+    if (na.rm) x <- na.omit(x)
     n <- length(x)
     switch( match.arg(alternative)
             , "two.sided" = {
@@ -749,7 +807,7 @@ SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "
 
   # Naive version:
   n.valid <- sum(d > 0) + sum(d < 0)
-  if(n.valid > 0) {
+  if (n.valid > 0) {
     RVAL <- binom.test(x=sum(d > 0), n=n.valid, p=0.5, alternative = alternative, conf.level = conf.level )
   } else {
     RVAL <- binom.test(x=1, n=1)
@@ -805,7 +863,8 @@ SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "
 #' population.
 #' @param alternative a character string specifying the alternative hypothesis,
 #' must be one of \code{"two.sided"} (default), \code{"greater"} or
-#' \code{"less"}.  You can specify just the initial letter. \cr For one-sample
+#' \code{"less"}.  You can specify just the initial letter. \cr
+#' For one-sample
 #' tests, \code{alternative} refers to the true mean of the parent population
 #' in relation to the hypothesized value of the mean.
 #' @param paired a logical indicating whether you want a paired z-test.
@@ -823,23 +882,37 @@ SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "
 #' contain \code{NA}s. Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class "\code{htest}" containing the following
-#' components: \item{statistic}{ the value of the z-statistic.} \item{p.value}{
-#' the p-value for the test} \item{conf.int}{a confidence interval for the mean
-#' appropriate to the specified alternative hypothesis.} \item{estimate}{the
-#' estimated mean or difference in means depending on whether it was a
-#' one-sample test or a two-sample test.} \item{null.value}{the specified
+#' components:
+#' \item{statistic}{ the value of the z-statistic.} 
+#' \item{p.value}{the p-value for the test} 
+#' \item{conf.int}{a confidence interval for the mean
+#' appropriate to the specified alternative hypothesis.}
+#' \item{estimate}{the estimated mean or difference in means depending on 
+#' whether it was a one-sample test or a two-sample test.} 
+#' \item{null.value}{the specified
 #' hypothesized value of the mean or mean difference depending on whether it
-#' was a one-sample test or a two-sample test.} \item{alternative}{a character
-#' string describing the alternative hypothesis.} \item{method}{ a character
-#' string indicating what type of test was performed.} \item{data.name}{a
-#' character string giving the name(s) of the data.}
-#' @author Andri Signorell <andri@@signorell.net>, based on R-Core code of
-#' \code{\link{t.test}},\cr documentation partly from Greg Snow
-#' <greg.snow@@imail.org>
-#' @seealso \code{\link{t.test}}, \code{\link{print.htest}}
-#' @references Stahel, W. (2002) \emph{Statistische Datenanalyse, 4th ed},
-#' vieweg
+#' was a one-sample test or a two-sample test.} 
+#' \item{alternative}{a character
+#' string describing the alternative hypothesis.} 
+#' \item{method}{ a character
+#' string indicating what type of test was performed.} 
+#' \item{data.name}{a character string giving the name(s) of the data.}
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>, 
+#' based on R-Core code of \code{\link{t.test}},\cr
+#' documentation partly from Greg Snow <greg.snow@@imail.org>
+#' 
+#' @seealso 
+#' \code{\link{t.test}}, 
+#' \code{\link{print.htest}}
+#' 
+#' @references 
+#' Stahel, W. (2002) \emph{Statistische Datenanalyse, 4th ed}, vieweg
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' x <- rnorm(25, 100, 5)
@@ -863,11 +936,11 @@ SignTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "
 #'                      int=c(6.5,5.4,8.1,3.5,0.5,3.8,6.8,4.9,9.5,6.2,4.1))
 #' with(d.oxen, ZTest(int, ext, sd_pop=1.8, paired=FALSE))
 #' 
-ZTest <- function (x, ...)
+ZTest <- function(x, ...) {
   UseMethod("ZTest")
+}
 
-
-ZTest.formula <- function (formula, data, subset, na.action, ...)  {
+ZTest.formula <- function(formula, data, subset, na.action, ...)  {
 
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
@@ -893,7 +966,7 @@ ZTest.formula <- function (formula, data, subset, na.action, ...)  {
 }
 
 
-ZTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "greater"),
+ZTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"),
                            paired = FALSE, mu = 0, sd_pop, conf.level = 0.95,  ...)  {
 
   alternative <- match.arg(alternative)
@@ -1036,24 +1109,37 @@ ZTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "gr
 #' @param na.action a function which indicates what should happen when the data
 #' contain \code{NA}s.  Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
+#' 
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the value of the F test statistic.}
+#' components: 
+#' \item{statistic}{the value of the F test statistic.}
 #' \item{parameter}{the degrees of the freedom of the F distribution of the
-#' test statistic.} \item{p.value}{the p-value of the test.} \item{conf.int}{a
+#' test statistic.} 
+#' \item{p.value}{the p-value of the test.} 
+#' \item{conf.int}{a
 #' confidence interval for the ratio of the population variances.}
 #' \item{estimate}{the ratio of the sample variances of \code{x} and \code{y}.}
 #' \item{null.value}{the ratio of population variances under the null.}
 #' \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{the character string \code{"F test to compare two
-#' variances"}.} \item{data.name}{a character string giving the names of the
-#' data.}
-#' @author Andri Signorell <andri@@signorell.net> (One sample test)\cr Two
-#' Sample test and help text from R-Core.
-#' @seealso \code{\link{var.test}}, \code{\link{bartlett.test}} for testing
-#' homogeneity of variances in more than two samples from normal distributions;
-#' \code{\link{ansari.test}} and \code{\link{mood.test}} for two rank based
-#' (nonparametric) two-sample tests for difference in scale.
+#' hypothesis.} 
+#' \item{method}{the character string \code{"F test to compare two variances"}.} 
+#' \item{data.name}{a character string giving the names of the data.}
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net> (One sample test)\cr
+#' Two Sample test and help text from R-Core.
+#' 
+#' @seealso 
+#' \code{\link{var.test}}, 
+#' \code{\link{bartlett.test}} for testing homogeneity of variances in more than
+#'  two samples from normal distributions;
+#' \code{\link{ansari.test}} and 
+#' \code{\link{mood.test}} for two rank based (nonparametric) two-sample tests 
+#' for difference in scale.
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' x <- rnorm(50, mean = 0, sd = 2)
@@ -1066,13 +1152,15 @@ ZTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "gr
 #' VarTest(x, y)                  # Do x and y have the same variance?
 #' VarTest(lm(x ~ 1), lm(y ~ 1))  # The same.
 #' 
-VarTest <- function(x, ...) UseMethod("VarTest")
+VarTest <- function(x, ...) {
+  UseMethod("VarTest")
+}
 
 
-VarTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "greater"), ratio = 1,
+VarTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), ratio = 1,
                              sigma.squared = 1, conf.level = 0.95, ...) {
 
-  if(is.null(y)){
+  if (is.null(y)) {
     # perform a one sample variance test
 
     alternative <- match.arg(alternative)
@@ -1133,7 +1221,7 @@ VarTest.default <- function (x, y = NULL, alternative = c("two.sided", "less", "
 }
 
 
-VarTest.formula <- function (formula, data, subset, na.action, ...) {
+VarTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
@@ -1197,24 +1285,34 @@ VarTest.formula <- function (formula, data, subset, na.action, ...) {
 #' test.
 #' @note This function was previously published as leveneTest() in the
 #' library(car) and has been integrated here without logical changes.
-#' @author John Fox \email{jfox@@mcmaster.ca}; original generic version
-#' contributed by Derek Ogle\cr adapted from a response posted by Brian Ripley
-#' to the r-help email list.
-#' @seealso \code{\link{fligner.test}} for a rank-based (nonparametric)
-#' \eqn{k}-sample test for homogeneity of variances; \code{\link{mood.test}}
-#' for another rank-based two-sample test for a difference in scale parameters;
-#' \code{\link{var.test}} and \code{\link{bartlett.test}} for parametric tests
-#' for the homogeneity in variance.
+#' 
+#' @author 
+#' John Fox \email{jfox@@mcmaster.ca}; 
+#' original generic version contributed by Derek Ogle\cr
+#' adapted from a response posted by Brian Ripley to the r-help email list.
+#' 
+#' @seealso 
+#' \code{\link{fligner.test}} for a rank-based (nonparametric)
+#' \eqn{k}-sample test for homogeneity of variances; 
+#' \code{\link{mood.test}} for another rank-based two-sample test for a 
+#' difference in scale parameters;
+#' \code{\link{var.test}} and 
+#' \code{\link{bartlett.test}} for parametric tests for the homogeneity in
+#' variance.
 #' 
 #' \code{\link[coin:ScaleTests]{ansari_test}} in package coin for exact and
 #' approximate \emph{conditional} p-values for the Ansari-Bradley test, as well
 #' as different methods for handling ties.
-#' @references Fox, J. (2008) \emph{Applied Regression Analysis and Generalized
+#' 
+#' @references 
+#' Fox, J. (2008) \emph{Applied Regression Analysis and Generalized
 #' Linear Models}, Second Edition. Sage.
 #' 
 #' Fox, J. and Weisberg, S. (2011) \emph{An R Companion to Applied Regression},
 #' Second Edition, Sage.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## example from ansari.test:
@@ -1243,11 +1341,11 @@ VarTest.formula <- function (formula, data, subset, na.action, ...) {
 #' LeveneTest(lm(conformity ~ fcategory*partner.status, data = Moore))
 #' }
 #' 
-LeveneTest <- function (y, ...) {
+LeveneTest <- function(y, ...) {
   UseMethod("LeveneTest")
 }
 
-LeveneTest.default <- function (y, group, center=median, ...) { # original levene.test
+LeveneTest.default <- function(y, group, center=median, ...) { # original levene.test
 
   if (!is.numeric(y))
     stop(deparse(substitute(y)), " is not a numeric variable")
@@ -1265,7 +1363,7 @@ LeveneTest.default <- function (y, group, center=median, ...) { # original leven
   dots <- deparse(substitute(...))
 
   attr(table, "heading") <- paste("Levene's Test for Homogeneity of Variance (center = ",
-                                  deparse(substitute(center)), if(!(dots == "NULL")) paste(":", dots),  ")", sep="")
+                                  deparse(substitute(center)), if (!(dots == "NULL")) paste(":", dots),  ")", sep="")
   table
 }
 
@@ -1276,7 +1374,7 @@ LeveneTest.formula <- function(formula, data, ...) {
   if (any(sapply(2:dim(mf)[2], function(j) is.numeric(mf[[j]]))))
     stop("Levene's test is not appropriate with quantitative explanatory variables.")
   y <- mf[,1]
-  if(dim(mf)[2]==2) group <- mf[,2]
+  if (dim(mf)[2]==2) group <- mf[,2]
   else {
     if (length(grep("\\+ | \\| | \\^ | \\:",form))>0) stop("Model must be completely crossed formula only.")
     group <- interaction(mf[,2:dim(mf)[2]])
@@ -1285,7 +1383,7 @@ LeveneTest.formula <- function(formula, data, ...) {
 }
 
 
-# LeveneTest.formula <- function (formula, data, subset, na.action, ...) {
+# LeveneTest.formula <- function(formula, data, subset, na.action, ...) {
 #
 #   # replaced as the original did not support subsets
 #
@@ -1304,7 +1402,7 @@ LeveneTest.formula <- function(formula, data, ...) {
 #   # if (length(mf) > 2L)
 #   #   stop("'formula' should be of the form response ~ group")
 #
-#   if(dim(mf)[2]==2)
+#   if (dim(mf)[2]==2)
 #     group <- mf[, 2]
 #   else {
 #     if (length(grep("\\+ | \\| | \\^ | \\:", formula)) > 0)
@@ -1413,16 +1511,26 @@ LeveneTest.lm <- function(y, ...) {
 #' @param na.rm defines if \code{NA}s should be omitted. Default is
 #' \code{FALSE}.
 #' @param \dots further arguments to be passed to or from methods.
-#' @return A list with the following components.  \item{statistic}{z, the value
-#' of the standardized runs statistic, if not exact p-values are computed.}
+#' 
+#' @return A list with the following components.  
+#' \item{statistic}{z, the value of the standardized runs statistic, if not 
+#' exact p-values are computed.}
 #' \item{parameter}{the number of runs, the total number of zeros (m) and ones
-#' (n)} \item{p.value}{the p-value for the test.} \item{data.name}{a character
-#' string giving the names of the data.} \item{alternative}{a character string
-#' describing the alternative hypothesis.}
-#' @author Andri Signorell <andri@@signorell.net>, exact p-values by Detlew
-#' Labes <detlewlabes@@gmx.de>
-#' @seealso Run Length Encoding \code{\link{rle}}
-#' @references Wackerly, D., Mendenhall, W. Scheaffer, R. L. (1986)
+#' (n)} 
+#' \item{p.value}{the p-value for the test.} 
+#' \item{data.name}{a character string giving the names of the data.} 
+#' \item{alternative}{a character string describing the alternative hypothesis.}
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>, 
+#' exact p-values by Detlew Labes <detlewlabes@@gmx.de>
+#' 
+#' @seealso 
+#' Run Length Encoding \code{\link{rle}}
+#' 
+#' @references 
+#' 
+#' Wackerly, D., Mendenhall, W. Scheaffer, R. L. (1986)
 #' \emph{Mathematical Statistics with Applications}, 3rd Ed., Duxbury Press,
 #' CA.
 #' 
@@ -1431,7 +1539,10 @@ LeveneTest.lm <- function(y, ...) {
 #' 
 #' Siegel, S. (1956) \emph{Nonparametric Statistics for the Behavioural
 #' Sciences}, McGraw-Hill Kogakusha, Tokyo.
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' # x will be coerced to a dichotomous variable
@@ -1471,9 +1582,11 @@ LeveneTest.lm <- function(y, ...) {
 #' RunsTest(A, B, exact=TRUE)
 #' RunsTest(A, B, exact=FALSE)
 #' 
-RunsTest <- function (x, ...)  UseMethod("RunsTest")
+RunsTest <- function(x, ...) {
+  UseMethod("RunsTest")
+}
 
-RunsTest.formula <- function (formula, data, subset, na.action, ...) {
+RunsTest.formula <- function(formula, data, subset, na.action, ...) {
 
   # this is a taken analogue to wilcox.test.formula
 
@@ -1514,10 +1627,10 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
     # author: D. Labes <detlewlabes at gmx.de>
 
     # function for calculating the denominator of the runs distribution
-    .druns_nom <- function(r, n1, n2){
+    .druns_nom <- function(r, n1, n2) {
       pp <- vector(mode="numeric",length=length(r))
-      for (i in seq_along(r)){
-        if (2*r[i]%/%2==r[i]){
+      for (i in seq_along(r)) {
+        if (2*r[i]%/%2==r[i]) {
           # even 2*k
           k <- r[i]/2
           pp[i] <- 2*choose(n1-1, k-1)*choose(n2-1, k-1)
@@ -1535,9 +1648,9 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
 
     n <- n1+n2
 
-    if(r<=1) stop("Number of runs must be > 1")
-    if(r>n) stop("Number of runs must be < (n1+n2")
-    if(n1<1 | n2<1) return(0) #??? is not random!
+    if (r<=1) stop("Number of runs must be > 1")
+    if (r>n) stop("Number of runs must be < (n1+n2")
+    if (n1<1 | n2<1) return(0) #??? is not random!
 
     E <- 1 + 2*n1*n2/n
 
@@ -1578,7 +1691,7 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
 
 
 
-  if(!is.null(y)) {
+  if (!is.null(y)) {
     dname <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
     # perform Wald-Wolfowitz-Test with 2 variables
     xy <- Sort(cbind(c(x,y), c(rep(0, length(x)), rep(1, length(y)))))[,2]
@@ -1603,7 +1716,7 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
   if (na.rm) x <- na.omit(x)
 
   # let's have a 0,1 vector if x is a numeric vector with more than 2 values
-  if(is.numeric(x) & (length(unique(x))>2)) {
+  if (is.numeric(x) & (length(unique(x))>2)) {
     est <- median(x, na.rm=TRUE)
     names(est) <- "median(x)"
     x <- ((x > est)*1)
@@ -1613,7 +1726,7 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
   }
 
   x <- factor(x)
-  if( nlevels(x) %nin% c(1,2) ) stop("Can only process dichotomous variables")
+  if ( nlevels(x) %nin% c(1,2) ) stop("Can only process dichotomous variables")
   x <- as.numeric(x) - 1
 
   # x <- sample(c(0,1), 100000000, replace=TRUE)
@@ -1626,15 +1739,15 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
   m <- sum(x==0)
   n <- sum(x==1)
 
-  if(is.null(exact)) { exact <- ((m +n) <= 30) }
+  if (is.null(exact)) { exact <- ((m +n) <= 30) }
 
   E <- 1 + 2*n*m / (n + m)
   s2 <- (2*n*m * (2*n*m - n - m)) / ((n + m)^2 * (n + m - 1))
 
   # this is the SPSS-Definition
   # http://publib.boulder.ibm.com/infocenter/spssstat/v20r0m0/index.jsp?topic=%2Fcom.ibm.spss.statistics.help%2Fidh_idd_npar_onesample_settings_tests_runs.htm
-  # if( n+m >= 50) {
-  if(correct){
+  # if ( n+m >= 50) {
+  if (correct) {
     switch( as.character(cut(runs - E, breaks=c(-Inf, -0.5, 0.5, Inf), labels=c("a", "b", "c")))
             , "a" = statistic <- (runs - E + 0.5) / sqrt(s2)
             , "b" = statistic <- 0
@@ -1664,7 +1777,7 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
   names(statistic) <- "z"  # Standardized Runs Statistic
 
   # do not report statistic when exact p-value is calculated
-  if(exact) statistic <- NULL
+  if (exact) statistic <- NULL
 
   structure(list(
     statistic = statistic,
@@ -1726,15 +1839,24 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
 #' @param data an optional data frame containing the variables in the model.
 #' By default the variables are taken from the environment which
 #' \code{DurbinWatsonTest} is called from.
-#' @return An object of class \code{"htest"} containing: \item{statistic}{the
-#' test statistic.} \item{p.value}{the corresponding p-value.} \item{method}{a
-#' character string with the method used.} \item{data.name}{a character string
-#' with the data name.}
+#' 
+#' @return An object of class \code{"htest"} containing: 
+#' \item{statistic}{the test statistic.} 
+#' \item{p.value}{the corresponding p-value.} 
+#' \item{method}{a character string with the method used.} 
+#' \item{data.name}{a character string with the data name.}
+#' 
 #' @note This function was previously published as \code{dwtest} in the
+#' 
 #' \pkg{lmtest} package and has been integrated here without logical changes.
-#' @author Torsten Hothorn, Achim Zeileis, Richard W. Farebrother (pan.f),
+#' 
+#' @author 
+#' Torsten Hothorn, Achim Zeileis, Richard W. Farebrother (pan.f),
 #' Clint Cummins (pan.f), Giovanni Millo, David Mitchell
-#' @seealso \code{\link{lm}}
+#' 
+#' @seealso 
+#' \code{\link{lm}}
+#' 
 #' @references
 #' 
 #' J. Durbin & G.S. Watson (1950), Testing for Serial Correlation in Least
@@ -1760,7 +1882,10 @@ RunsTest.default <- function(x, y=NULL, alternative=c("two.sided", "less", "grea
 #' 
 #' J. Racine & R. Hyndman (2002), Using R To Teach Econometrics. \emph{Journal
 #' of Applied Econometrics} \bold{17}, 175--189.
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' 
@@ -1791,15 +1916,15 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
   dname <- paste(deparse(substitute(formula)))
   alternative <- match.arg(alternative)
 
-  if(!inherits(formula, "formula")) {
-    if(!is.null(w <- weights(formula))) {
-      if(!isTRUE(all.equal(as.vector(w), rep(1L, length(w)))))
+  if (!inherits(formula, "formula")) {
+    if (!is.null(w <- weights(formula))) {
+      if (!isTRUE(all.equal(as.vector(w), rep(1L, length(w)))))
         stop("weighted regressions are not supported")
     }
-    X <- if(is.matrix(formula$x))
+    X <- if (is.matrix(formula$x))
       formula$x
     else model.matrix(terms(formula), model.frame(formula))
-    y <- if(is.vector(formula$y))
+    y <- if (is.vector(formula$y))
       formula$y
     else model.response(model.frame(formula))
   } else {
@@ -1808,9 +1933,9 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
     X <- model.matrix(formula, data = data)
   }
 
-  if(!is.null(order.by))
+  if (!is.null(order.by))
   {
-    if(inherits(order.by, "formula")) {
+    if (inherits(order.by, "formula")) {
       z <- model.matrix(order.by, data = data)
       z <- as.vector(z[,ncol(z)])
     } else {
@@ -1821,24 +1946,24 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
   }
 
   n <- nrow(X)
-  if(is.null(exact)) exact <- (n < 100)
+  if (is.null(exact)) exact <- (n < 100)
   k <- ncol(X)
 
   res <- lm.fit(X,y)$residuals
   dw <- sum(diff(res)^2)/sum(res^2)
   Q1 <- chol2inv(qr.R(qr(X)))
-  if(n < 3) {
+  if (n < 3) {
     warning("not enough observations for computing a p value, set to 1")
     pval <- 1
   } else {
-    if(exact)
+    if (exact)
     {
       A <- diag(c(1,rep(2, n-2), 1))
       A[abs(row(A)-col(A))==1] <- -1
       MA <- diag(rep(1,n)) - X %*% Q1 %*% t(X)
       MA <- MA %*% A
       ev <- eigen(MA)$values[1:(n-k)]
-      if(any(Im(ev)>tol)) warning("imaginary parts of eigenvalues discarded")
+      if (any(Im(ev)>tol)) warning("imaginary parts of eigenvalues discarded")
       ev <- Re(ev)
       ev <- ev[ev>tol]
 
@@ -1850,15 +1975,15 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
                      "less" = (1 - pdw(dw)),
                      "greater" = pdw(dw))
 
-      if(is.na(pval) || ((pval > 1) | (pval < 0)))
+      if (is.na(pval) || ((pval > 1) | (pval < 0)))
       {
         warning("exact p value cannot be computed (not in [0,1]), approximate p value will be used")
         exact <- FALSE
       }
     }
-    if(!exact)
+    if (!exact)
     {
-      if(n < max(5, k)) {
+      if (n < max(5, k)) {
         warning("not enough observations for computing an approximate p value, set to 1")
         pval <- 1
       } else {
@@ -1895,10 +2020,9 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
 
 
 
-#' Von Neumann's Successive Difference Test %% ~~function to do ... ~~
+#' Von Neumann's Successive Difference Test 
 #' 
-#' A popular statistic to test for independence is the von Neumann ratio. %% ~~
-#' A concise (1-5 lines) description of what the function does. ~~
+#' A popular statistic to test for independence is the von Neumann ratio.
 #' 
 #' The VN test statistic is in the unbiased case
 #' \deqn{VN=\frac{\sum_{i=1}^{n-1}(x_i-x_{i+1})^2 \cdot
@@ -1922,31 +2046,43 @@ DurbinWatsonTest <- function(formula, order.by = NULL, alternative = c("greater"
 #' \code{"less"}. You can specify just the initial letter.
 #' @param unbiased logical. In order for VN to be an unbiased estimate of the
 #' true population value, the calculated value is multiplied by
-#' \eqn{n/(n-1)}{n/(n-1)}. Default is TRUE. %% ~~Describe \code{unbiased}
-#' here~~
+#' \eqn{n/(n-1)}{n/(n-1)}. Default is TRUE. 
+#' 
 #' @return A list with class "htest" containing the components:
 #' \item{statistic}{the value of the VN statistic and the normalized statistic
-#' test.} \item{parameter, n}{the size of the data, after the remotion of
-#' consecutive duplicate values.} \item{p.value}{the p-value of the test.}
+#' test.}
+#' \item{parameter, n}{the size of the data, after the remotion of
+#' consecutive duplicate values.}
+#' \item{p.value}{the p-value of the test.}
 #' \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{a character string indicating the test
-#' performed.} \item{data.name}{a character string giving the name of the
+#' hypothesis.}
+#' \item{method}{a character string indicating the test
+#' performed.}
+#' \item{data.name}{a character string giving the name of the
 #' data.}
-#' @author Andri Signorell <andri@@signorell.net>
-#' @seealso \code{\link{BartelsRankTest}} %% ~~objects to See Also as
-#' \code{\link{help}}, ~~~
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>
+#' 
+#' @seealso 
+#' \code{\link{BartelsRankTest}} 
+#' 
 #' @references von Neumann, J. (1941) Distribution of the ratio of the mean
 #' square successive difference to the variance. \emph{Annals of Mathematical
 #' Statistics} \bold{12}, 367-395.
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' VonNeumannTest(d.pizza$temperature)
 #' 
-VonNeumannTest <- function (x, alternative = c("two.sided", "less", "greater"), unbiased=TRUE) {
+VonNeumannTest <- function(x, alternative = c("two.sided", "less", "greater"),
+  unbiased=TRUE) {
 
 
-  ## ToDo: use incomplete beta for exact p-values
+  ## TODO: use incomplete beta for exact p-values
   ## ************************
   ## see: von Neumann Successive Difference 1941
   ##
@@ -1978,7 +2114,7 @@ VonNeumannTest <- function (x, alternative = c("two.sided", "less", "greater"), 
   n <- length(x)
   mx <- mean(x)
 
-  if(unbiased) {
+  if (unbiased) {
 
     # http://www.chegg.com/homework-help/detecting-autocorrelation-von-neumann-ratio-test-assuming-re-chapter-12-problem-4-solution-9780073375779-exc
 
@@ -2048,21 +2184,30 @@ VonNeumannTest <- function (x, alternative = c("two.sided", "less", "greater"), 
 #' "\code{oscillation}".
 #' @param method a character string specifying the method used to compute the
 #' p-value. Must be one of \code{normal} (default), \code{beta} or \code{auto}.
+#' 
 #' @return A list with class "htest" containing the components:
 #' \item{statistic}{the value of the normalized statistic test.}
 #' \item{parameter, n}{the size of the data, after the remotion of consecutive
-#' duplicate values.} \item{p.value}{the p-value of the test.}
-#' \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{a character string indicating the test
-#' performed.} \item{data.name}{a character string giving the name of the
-#' data.} \item{rvn}{the value of the RVN statistic (not show on screen).}
+#' duplicate values.} 
+#' \item{p.value}{the p-value of the test.}
+#' \item{alternative}{a character string describing the alternative hypothesis.} 
+#' \item{method}{a character string indicating the test performed.} 
+#' \item{data.name}{a character string giving the name of the data.} 
+#' \item{rvn}{the value of the RVN statistic (not show on screen).}
 #' \item{nm}{the value of the NM statistic, the numerator of RVN (not show on
-#' screen).} \item{mu}{the mean value of the RVN statistic (not show on
-#' screen).} \item{var}{the variance of the RVN statistic (not show on
-#' screen).}
-#' @author Frederico Caeiro <fac@@fct.unl.pt>
-#' @seealso \code{\link[randtests]{rank.test}}, \code{\link{RunsTest}}
-#' @references Bartels, R. (1982) The Rank Version of von Neumann's Ratio Test
+#' screen).} 
+#' \item{mu}{the mean value of the RVN statistic (not show on screen).} 
+#' \item{var}{the variance of the RVN statistic (not show on screen).}
+#' 
+#' @author 
+#' Frederico Caeiro <fac@@fct.unl.pt>
+#' 
+#' @seealso
+#' \code{\link[randtests]{rank.test}}, 
+#' \code{\link{RunsTest}}
+#' 
+#' @references 
+#' Bartels, R. (1982) The Rank Version of von Neumann's Ratio Test
 #' for Randomness, \emph{Journal of the American Statistical Association},
 #' \bold{77} (377), 40-46.
 #' 
@@ -2073,7 +2218,10 @@ VonNeumannTest <- function (x, alternative = c("two.sided", "less", "greater"), 
 #' von Neumann, J. (1941) Distribution of the ratio of the mean square
 #' successive difference to the variance. \emph{Annals of Mathematical
 #' Statistics} \bold{12}, 367-395.
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' ## Example 5.1 in Gibbons and Chakraborti (2003), p.98.
@@ -2128,15 +2276,15 @@ BartelsRankTest <- function(x, alternative = c("two.sided", "trend", "oscillatio
   n <- length(x)
 
 
-  # if (alternative == "t"){alternative <- "two.sided"}
-  # if (alternative == "l"){alternative <- "left.sided"}
-  # if (alternative == "r"){alternative <- "right.sided"}
+  # if (alternative == "t") {alternative <- "two.sided"}
+  # if (alternative == "l") {alternative <- "left.sided"}
+  # if (alternative == "r") {alternative <- "right.sided"}
   # if (alternative != "two.sided" & alternative != "left.sided" & alternative != "right.sided")
   # {stop("must give a valid alternative")}
 
   alternative <- match.arg(alternative)
 
-  if (n < 10){stop("sample size must be greater than 9")}
+  if (n < 10) {stop("sample size must be greater than 9")}
 
   # unique
   rk <- rank(x)
@@ -2147,27 +2295,27 @@ BartelsRankTest <- function(x, alternative = c("two.sided", "trend", "oscillatio
   vr <- (4*(n-2)*(5*n^2-2*n-9))/(5*n*(n+1)*(n-1)^2)
 
   # Computes the p-value
-  if (pvalue == "auto"){
+  if (pvalue == "auto") {
     pvalue <- ifelse(n <= 100, "beta", "normal")
   }
 
-  if (pvalue == "beta"){
+  if (pvalue == "beta") {
     btp <- (5*n*(n+1)*(n-1)^2)/(2*(n-2)*(5*n^2-2*n-9))-1/2
     pv0 <- pbeta(RVN/4, shape1=btp, shape2=btp)
   }
-  if (pvalue=="normal"){
+  if (pvalue=="normal") {
     pv0 <- pnorm((RVN - mu) / sqrt(vr))
   }
 
-  if (alternative=="two.sided"){
+  if (alternative=="two.sided") {
     pv <- 2 * min(pv0, 1 - pv0)
     alternative <- "nonrandomness"
   }
-  if (alternative == "trend"){
+  if (alternative == "trend") {
     pv <- pv0
     alternative <- "trend"
   }
-  if (alternative == "oscillation"){
+  if (alternative == "oscillation") {
     pv <- 1 - pv0
     alternative <- "systematic oscillation"
   }
@@ -2225,17 +2373,26 @@ BartelsRankTest <- function(x, alternative = c("two.sided", "trend", "oscillatio
 #' \code{floor(length(x)-2)/2}.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class \dQuote{htest} containing the following
-#' components: \item{statistic}{the value of the Moses Test statistic.}
-#' \item{p.value}{the p-value for the test.} \item{method}{the character string
-#' \dQuote{Moses Test of Extreme Reactions}.} \item{data.name}{a character
-#' string giving the name(s) of the data.}
-#' @author Andri Signorell <andri@@signorell.net>
-#' @seealso \code{\link{wilcox.test}}, \code{\link{ks.test}}
-#' @references Moses, L.E. (1952) A Two-Sample Test, \emph{Psychometrika}, 17,
-#' 239-247.
+#' components: 
+#' \item{statistic}{the value of the Moses Test statistic.}
+#' \item{p.value}{the p-value for the test.} 
+#' \item{method}{the character string \dQuote{Moses Test of Extreme Reactions}.} 
+#' \item{data.name}{a character string giving the name(s) of the data.}
 #' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>
+#' 
+#' @seealso 
+#' \code{\link{wilcox.test}}, 
+#' \code{\link{ks.test}}
+#' 
+#' @references 
+#' Moses, L.E. (1952) A Two-Sample Test, \emph{Psychometrika}, 17, 239-247.
 #' \url{http://www-01.ibm.com/support/knowledgecenter/SSLVMB_20.0.0/com.ibm.spss.statistics.help/alg_npar_tests_moses.htm}
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' x <- c(0.80, 0.83, 1.89, 1.04, 1.45, 1.38, 1.91, 1.64, 0.73, 1.46)
@@ -2250,7 +2407,9 @@ BartelsRankTest <- function(x, alternative = c("two.sided", "trend", "oscillatio
 #' 
 #' MosesTest(x, y)
 #' 
-MosesTest <- function (x, ...)  UseMethod("MosesTest")
+MosesTest <- function(x, ...) { 
+  UseMethod("MosesTest")
+}
 
 # Extremreaktionen nach Moses: Nullhypothese: Die Spannweite der Werte ist
 # in beiden Gruppen gleich gross. Die Werte beider Gruppen werden in eine gemeinsame
@@ -2268,7 +2427,7 @@ MosesTest <- function (x, ...)  UseMethod("MosesTest")
 # Abschnitt Moses-Test, S. 760.
 
 
-MosesTest.formula <- function (formula, data, subset, na.action, ...) {
+MosesTest.formula <- function(formula, data, subset, na.action, ...) {
 
   # this is a taken analogue to wilcox.test.formula
 
@@ -2297,16 +2456,16 @@ MosesTest.formula <- function (formula, data, subset, na.action, ...) {
 
 
 
-MosesTest.default <- function(x, y, extreme = NULL, ...){
+MosesTest.default <- function(x, y, extreme = NULL, ...) {
 
   # example
   # x <- c(0.80, 0.83, 1.89, 1.04, 1.45, 1.38, 1.91, 1.64, 0.73, 1.46)
   # y <- c(1.15, 0.88, 0.90, 0.74, 1.21)
   # MosesTest(y, x)
 
-  if(is.null(extreme)) extreme <- pmax(floor(0.05 * length(x)), 1)
+  if (is.null(extreme)) extreme <- pmax(floor(0.05 * length(x)), 1)
   h <- extreme
-  if(2*h > length(x)-2) h <- floor((length(x)-2)/2)
+  if (2*h > length(x)-2) h <- floor((length(x)-2)/2)
 
   # no alternative for the moses.test
   DNAME <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
@@ -2393,24 +2552,38 @@ MosesTest.default <- function(x, y, extreme = NULL, ...){
 #' @return A list of class \code{htest}, containing the following components:
 #' \item{statistic}{ Siegel-Tukey test (Wilcoxon test on tie-adjusted
 #' Siegel-Tukey ranks, after the median adjustment if specified).}
-#' \item{p.value}{ the p-value for the test} \item{null.value}{is the value of
+#' \item{p.value}{ the p-value for the test} 
+#' \item{null.value}{is the value of
 #' the median specified by the null hypothesis. This equals the input argument
-#' \code{mu}. } \item{alternative}{a character string describing the
-#' alternative hypothesis.} \item{method}{ the type of test applied}
+#' \code{mu}. } 
+#' \item{alternative}{a character string describing the
+#' alternative hypothesis.} 
+#' \item{method}{ the type of test applied}
 #' \item{data.name}{a character string giving the names of the data.}
-#' @author Daniel Malter, Tal Galili <tal.galili@@gmail.com>, Andri Signorell
-#' <andri@@signorell.net>\cr published on:
+#' 
+#' @author 
+#' Daniel Malter, Tal Galili <tal.galili@@gmail.com>, 
+#' Andri Signorell <andri@@signorell.net>\cr
+#' published on:
 #' \url{http://www.r-statistics.com/2010/02/siegel-tukey-a-non-parametric-test-for-equality-in-variability-r-code/}
-#' @seealso \code{\link{mood.test}}, \code{\link{ansari.test}},
-#' \code{\link{wilcox.test}}, \code{\link{LeveneTest}}
-#' @references Siegel, S., Tukey, J. W. (1960): A nonparametric sum of ranks
+#' 
+#' @seealso 
+#' \code{\link{mood.test}}, 
+#' \code{\link{ansari.test}},
+#' \code{\link{wilcox.test}}, 
+#' \code{\link{LeveneTest}}
+#' 
+#' @references 
+#' Siegel, S., Tukey, J. W. (1960): A nonparametric sum of ranks
 #' procedure for relative spread in unpaired samples. \emph{Journal of the
 #' American Statistical Association}.
 #' 
 #' Sheskin, D. J. (2004): \emph{Handbook of parametric and nonparametric
 #' statistical procedures} 3rd edition. Chapman and Hall/CRC. Boca Raton, FL.
-#' %% ~put references to the literature/web site here ~
+#' 
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' # Duller, S. 183
@@ -2476,9 +2649,11 @@ MosesTest.default <- function(x, y, extreme = NULL, ...){
 #' id <- c(0,0,1,1,1,1,1)
 #' SiegelTukeyTest(x ~ id)
 #' 
-SiegelTukeyTest <- function (x, ...)  UseMethod("SiegelTukeyTest")
+SiegelTukeyTest <- function(x, ...)  {
+  UseMethod("SiegelTukeyTest")
+}
 
-SiegelTukeyTest.formula <- function (formula, data, subset, na.action, ...)
+SiegelTukeyTest.formula <- function(formula, data, subset, na.action, ...)
 {
   # this is a taken analogue to wilcox.test.formula
 
@@ -2519,8 +2694,8 @@ SiegelTukeyRank <- function(x, g, drop.median = TRUE) {
   sort.id <- g[ord.x]
 
   n <- length(x)
-  if(drop.median){
-    if(n %% 2 > 0) {
+  if (drop.median) {
+    if (n %% 2 > 0) {
       # gonna have to drop the (first) median value
       # as we sorted by the groupsize, this will be the one out of the bigger group (if existing)
       fm <- which( sort.x == median(sort.x))[1]
@@ -2597,7 +2772,7 @@ SiegelTukeyTest.default <- function(x, y, adjust.median = FALSE,
   }
 
   # the larger group comes first
-  if( length(x) > length(y) ){
+  if ( length(x) > length(y) ) {
     xx <- c(x, y)
     id <- c(rep(0, length(x)), rep(1, length(y)))
   } else {
@@ -2623,7 +2798,7 @@ SiegelTukeyTest.default <- function(x, y, adjust.median = FALSE,
   class(RVAL) <- "htest"
   return(RVAL)
 
-  if(suppressWarnings(wilcox.test(x,y)$p.value) < 0.05) warning("SiegelTukeyTest: wilcox.test(x, y) is significant! Consider setting adjust.median = TRUE." )
+  if (suppressWarnings(wilcox.test(x,y)$p.value) < 0.05) warning("SiegelTukeyTest: wilcox.test(x, y) is significant! Consider setting adjust.median = TRUE." )
 
 }
 
@@ -2680,15 +2855,20 @@ SiegelTukeyTest.default <- function(x, y, adjust.median = FALSE,
 #' @note The function was previously published as \code{jonckheere.test()} in
 #' the \pkg{clinfun} package and has been integrated here without logical
 #' changes. Some argument checks and a formula interface were added.
-#' @author Venkatraman E. Seshan <seshanv@@mskcc.org>, minor adaptations Andri
-#' Signorell
+#' 
+#' @author 
+#' Venkatraman E. Seshan <seshanv@@mskcc.org>, 
+#' minor adaptations Andri Signorell
+#' 
 #' @references Jonckheere, A. R. (1954). A distribution-free k-sample test
 #' again ordered alternatives. \emph{Biometrika} 41:133-145.
 #' 
 #' Terpstra, T. J. (1952). The asymptotic normality and consistency of
 #' Kendall's test against trend, when ties are present in one ranking.
 #' \emph{Indagationes Mathematicae} 14:327-333.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' set.seed(1234)
@@ -2714,9 +2894,11 @@ SiegelTukeyTest.default <- function(x, y, adjust.median = FALSE,
 #' # the formula interface:
 #' JonckheereTerpstraTest(time ~ grp, data=coffee)
 #' 
-JonckheereTerpstraTest <- function (x, ...)  UseMethod("JonckheereTerpstraTest")
+JonckheereTerpstraTest <- function(x, ...) {
+  UseMethod("JonckheereTerpstraTest")
+}
 
-JonckheereTerpstraTest.formula <- function (formula, data, subset, na.action, ...) {
+JonckheereTerpstraTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || (length(formula) != 3L))
     stop("'formula' missing or incorrect")
@@ -2732,7 +2914,7 @@ JonckheereTerpstraTest.formula <- function (formula, data, subset, na.action, ..
   y
 }
 
-JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "increasing", "decreasing"), nperm=NULL, ...) {
+JonckheereTerpstraTest.default <- function(x, g, alternative = c("two.sided", "increasing", "decreasing"), nperm=NULL, ...) {
 
   if (is.list(x)) {
     if (length(x) < 2L)
@@ -2785,7 +2967,7 @@ JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "
 
     n <- length(x)
     pjtrsum <- rep(0, nperm)
-    for (np in 1:nperm){
+    for (np in 1:nperm) {
       jtrsum <- 0
       for(i in 1L:(ng-1)) {
         na <- gsize[i]
@@ -2812,9 +2994,9 @@ JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "
 
 
   # Alternative for the JT-Statistic
-  # JT <- function(z){
+  # JT <- function(z) {
   #
-  #   w <- function(x, y){
+  #   w <- function(x, y) {
   #     # verbatim from wilcox.test STATISTIC
   #     r <- rank(c(x, y))
   #     n.x <- as.double(length(x))
@@ -2826,7 +3008,7 @@ JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "
   #   k <- length(z)
   #   u <- 0
   #
-  #   for(i in 2:k){
+  #   for(i in 2:k) {
   #     for(j in 1:(i-1))	{
   #       u <- u + w(z[[i]], z[[j]])
   #     } }
@@ -2844,13 +3026,13 @@ JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "
   #   pJCK(piece, grp)
 
 
-  if(!is.numeric(x)) stop("data values should be numeric")
-  if(!is.numeric(g) & !is.ordered(g)) stop("group should be numeric or ordered factor")
+  if (!is.numeric(x)) stop("data values should be numeric")
+  if (!is.numeric(g) & !is.ordered(g)) stop("group should be numeric or ordered factor")
   alternative <- match.arg(alternative)
   METHOD <- "Jonckheere-Terpstra test"
   PERM <- !missing(nperm)
   n <- length(x)
-  if(length(g) != n) stop("lengths of data values and group don't match")
+  if (length(g) != n) stop("lengths of data values and group don't match")
   TIES <- length(unique(x)) != n
   gsize <- table(g)
   ng <- length(gsize)
@@ -2918,36 +3100,48 @@ JonckheereTerpstraTest.default <- function (x, g, alternative = c("two.sided", "
 #' 
 #' @param x a numeric vector of data values, the number of which must be
 #' between 5 and 5000. Missing values are allowed.
+#' 
 #' @return A list of class \code{htest}, containing the following components:
-#' \item{statistic}{the value of the Shapiro-Francia statistic.} \item{p.value
-#' }{the p-value for the test.} \item{method}{the character string
-#' \dQuote{Shapiro-Francia normality test}.} \item{data.name}{a character
-#' string giving the name(s) of the data.}
+#' \item{statistic}{the value of the Shapiro-Francia statistic.}
+#' \item{p.value
+#' }{the p-value for the test.} 
+#' \item{method}{the character string \dQuote{Shapiro-Francia normality test}.}
+#' \item{data.name}{a character string giving the name(s) of the data.}
+#'  
 #' @note The Shapiro-Francia test is known to perform well, see also the
 #' comments by Royston (1993). The expected ordered quantiles from the standard
 #' normal distribution are approximated by \code{qnorm(ppoints(x, a = 3/8))},
 #' being slightly different from the approximation \code{qnorm(ppoints(x, a =
 #' 1/2))} used for the normal quantile-quantile plot by \code{\link{qqnorm}}
 #' for sample sizes greater than 10.
-#' @author Juergen Gross <gross@@statistik.uni-dortmund.de>
-#' @seealso \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
-#' normality. \code{\link{AndersonDarlingTest}},
-#' \code{\link{CramerVonMisesTest}}, \code{\link{LillieTest}},
+#' 
+#' @author 
+#' Juergen Gross <gross@@statistik.uni-dortmund.de>
+#' 
+#' @seealso 
+#' \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for normality. 
+#' \code{\link{AndersonDarlingTest}},
+#' \code{\link{CramerVonMisesTest}}, 
+#' \code{\link{LillieTest}},
 #' \code{\link{PearsonTest}} for performing further tests for normality.
 #' \code{\link{qqnorm}} for producing a normal quantile-quantile plot.
-#' @references Royston, P. (1993): A pocket-calculator algorithm for the
+#' 
+#' @references 
+#' Royston, P. (1993): A pocket-calculator algorithm for the
 #' Shapiro-Francia test for non-normality: an application to medicine.
 #' \emph{Statistics in Medicine}, 12, 181--184.
 #' 
 #' Thode Jr., H.C. (2002): \emph{Testing for Normality}. Marcel Dekker, New
 #' York. (2002, Sec. 2.3.2)
 #' @keywords htest
+#'
+#'
 #' @examples
 #' 
 #' ShapiroFranciaTest(rnorm(100, mean = 5, sd = 3))
-#' ShapiroFranciaTest(runif(100, min = 2, max = 4))
+#' ShapiroFranciaTest(runif (100, min = 2, max = 4))
 #' 
-ShapiroFranciaTest <- function (x) {
+ShapiroFranciaTest <- function(x) {
 
   DNAME <- deparse(substitute(x))
   x <- sort(x[complete.cases(x)])
@@ -2996,10 +3190,14 @@ ShapiroFranciaTest <- function (x) {
 #' freedom.
 #' @return A list of class \code{htest}, containing the following components:
 #' \item{statistic}{the value of the Pearson chi-square statistic.}
-#' \item{p.value }{the p-value for the test.} \item{method}{the character
-#' string \dQuote{Pearson chi-square normality test}.} \item{data.name}{a
-#' character string giving the name(s) of the data.} \item{n.classes}{the
-#' number of classes used for the test.} \item{df}{the degress of freedom of
+#' \item{p.value }{the p-value for the test.}
+#' \item{method}{the character
+#' string \dQuote{Pearson chi-square normality test}.}
+#' \item{data.name}{a
+#' character string giving the name(s) of the data.}
+#' \item{n.classes}{the
+#' number of classes used for the test.}
+#' \item{df}{the degress of freedom of
 #' the chi-square distribution used to compute the p-value.}
 #' @note The Pearson chi-square test is usually not recommended for testing the
 #' composite hypothesis of normality due to its inferior power properties
@@ -3020,25 +3218,34 @@ ShapiroFranciaTest <- function (x) {
 #' The function call \code{PearsonTest(x)} essentially produces the same result
 #' as the S-PLUS function call \code{chisq.gof((x-mean(x))/sqrt(var(x)),
 #' n.param.est=2)}.
-#' @author Juergen Gross <gross@@statistik.uni-dortmund.de>
-#' @seealso \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
-#' normality. \code{\link{AndersonDarlingTest}},
-#' \code{\link{CramerVonMisesTest}}, \code{\link{LillieTest}},
+#' 
+#' @author 
+#' Juergen Gross <gross@@statistik.uni-dortmund.de>
+#' 
+#' @seealso 
+#' \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
+#' normality. 
+#' \code{\link{AndersonDarlingTest}},
+#' \code{\link{CramerVonMisesTest}}, 
+#' \code{\link{LillieTest}},
 #' \code{\link{ShapiroFranciaTest}} for performing further tests for normality.
 #' \code{\link{qqnorm}} for producing a normal quantile-quantile plot.
+#' 
 #' @references Moore, D.S., (1986) Tests of the chi-squared type. In:
 #' D'Agostino, R.B. and Stephens, M.A., eds.: \emph{Goodness-of-Fit
 #' Techniques}. Marcel Dekker, New York.
 #' 
 #' Thode Jr., H.C., (2002) \emph{Testing for Normality}. Marcel Dekker, New
 #' York. Sec. 5.2
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' PearsonTest(rnorm(100, mean = 5, sd = 3))
-#' PearsonTest(runif(100, min = 2, max = 4))
+#' PearsonTest(runif (100, min = 2, max = 4))
 #' 
-PearsonTest <- function (x, n.classes = ceiling(2 * (n^(2/5))), adjust = TRUE) {
+PearsonTest <- function(x, n.classes = ceiling(2 * (n^(2/5))), adjust = TRUE) {
 
   DNAME <- deparse(substitute(x))
   x <- x[complete.cases(x)]
@@ -3091,7 +3298,9 @@ PearsonTest <- function (x, n.classes = ceiling(2 * (n^(2/5))), adjust = TRUE) {
 #' greater than 4. Missing values are allowed.
 #' @return A list of class \code{htest}, containing the following components:
 #' \item{statistic}{the value of the Lilliefors (Kolomogorv-Smirnov)
-#' statistic.} \item{p.value }{the p-value for the test.} \item{method}{the
+#' statistic.}
+#' \item{p.value }{the p-value for the test.}
+#' \item{method}{the
 #' character string \dQuote{Lilliefors (Kolmogorov-Smirnov) normality test}.}
 #' \item{data.name}{a character string giving the name(s) of the data.}
 #' @note The Lilliefors (Kolomorov-Smirnov) test is the most famous EDF omnibus
@@ -3109,13 +3318,21 @@ PearsonTest <- function (x, n.classes = ceiling(2 * (n^(2/5))), adjust = TRUE) {
 #' p-value greater than 0.1. (Actually, the alternative p-value approximation
 #' is provided for the complete range of test statistic values, but is only
 #' used when the Dallal-Wilkinson approximation fails.)
-#' @author Juergen Gross <gross@@statistik.uni-dortmund.de>
-#' @seealso \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
-#' normality. \code{\link{AndersonDarlingTest}},
-#' \code{\link{CramerVonMisesTest}}, \code{\link{PearsonTest}},
+#' 
+#' @author 
+#' Juergen Gross <gross@@statistik.uni-dortmund.de>
+#' 
+#' @seealso
+#'  \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
+#' normality. 
+#' \code{\link{AndersonDarlingTest}},
+#' \code{\link{CramerVonMisesTest}}, 
+#' \code{\link{PearsonTest}},
 #' \code{\link{ShapiroFranciaTest}} for performing further tests for normality.
 #' \code{\link{qqnorm}} for producing a normal quantile-quantile plot.
-#' @references Dallal, G.E. and Wilkinson, L. (1986) An analytic approximation
+#' 
+#' @references 
+#' Dallal, G.E. and Wilkinson, L. (1986) An analytic approximation
 #' to the distribution of Lilliefors' test for normality. \emph{The American
 #' Statistician}, 40, 294--296.
 #' 
@@ -3124,13 +3341,15 @@ PearsonTest <- function (x, n.classes = ceiling(2 * (n^(2/5))), adjust = TRUE) {
 #' 730--737.
 #' 
 #' Thode Jr., H.C. (2002) \emph{Testing for Normality} Marcel Dekker, New York.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' LillieTest(rnorm(100, mean = 5, sd = 3))
-#' LillieTest(runif(100, min = 2, max = 4))
+#' LillieTest(runif (100, min = 2, max = 4))
 #' 
-LillieTest <- function (x) {
+LillieTest <- function(x) {
 
   DNAME <- deparse(substitute(x))
   x <- sort(x[complete.cases(x)])
@@ -3198,29 +3417,40 @@ LillieTest <- function (x) {
 #' 
 #' @param x a numeric vector of data values, the number of which must be
 #' greater than 7. Missing values are allowed.
+#' 
 #' @return A list of class \code{htest}, containing the following components:
-#' \item{statistic}{the value of the Cramer-von Mises statistic.} \item{p.value
-#' }{the p-value for the test.} \item{method}{the character string
-#' \dQuote{Cramer-von Mises normality test}.} \item{data.name}{a character
-#' string giving the name(s) of the data.}
-#' @author Juergen Gross <gross@@statistik.uni-dortmund.de>
-#' @seealso \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for
-#' normality. \code{\link{AndersonDarlingTest}}, \code{\link{LillieTest}},
-#' \code{\link{PearsonTest}}, \code{\link{ShapiroFranciaTest}} for performing
-#' further tests for normality. \code{\link{qqnorm}} for producing a normal
-#' quantile-quantile plot.
-#' @references Stephens, M.A. (1986) Tests based on EDF statistics In:
+#' \item{statistic}{the value of the Cramer-von Mises statistic.}
+#' \item{p.value}{the p-value for the test.}
+#' \item{method}{the character string \dQuote{Cramer-von Mises normality test}.}
+#' \item{data.name}{a character string giving the name(s) of the data.}
+#' 
+#' @author 
+#' Juergen Gross <gross@@statistik.uni-dortmund.de>
+#' 
+#' @seealso 
+#' \code{\link{shapiro.test}} for performing the Shapiro-Wilk test for normality. 
+#' \code{\link{AndersonDarlingTest}}, 
+#' \code{\link{LillieTest}},
+#' \code{\link{PearsonTest}}, 
+#' \code{\link{ShapiroFranciaTest}} for performing
+#' further tests for normality. 
+#' \code{\link{qqnorm}} for producing a normal quantile-quantile plot.
+#' 
+#' @references 
+#' Stephens, M.A. (1986) Tests based on EDF statistics In:
 #' D'Agostino, R.B. and Stephens, M.A., eds.: \emph{Goodness-of-Fit
 #' Techniques}. Marcel Dekker, New York.
 #' 
 #' Thode Jr., H.C. (2002) \emph{Testing for Normality} Marcel Dekker, New York.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' CramerVonMisesTest(rnorm(100, mean = 5, sd = 3))
 #' CramerVonMisesTest(runif(100, min = 2, max = 4))
 #' 
-CramerVonMisesTest <- function (x) {
+CramerVonMisesTest <- function(x) {
   DNAME <- deparse(substitute(x))
   x <- sort(x[complete.cases(x)])
   n <- length(x)
@@ -3256,7 +3486,7 @@ CramerVonMisesTest <- function (x) {
 
 
 #
-# AndersonDarlingTest <- function (x) {
+# AndersonDarlingTest <- function(x) {
 #
 #     DNAME <- deparse(substitute(x))
 #     x <- sort(x[complete.cases(x)])
@@ -3318,11 +3548,14 @@ CramerVonMisesTest <- function (x) {
 #' to compute the cumulative distribution function for the null distribution.
 #' @param \dots additional arguments for the cumulative distribution function.
 #' @param nullname optional character string describing the null
-#' distribution.\cr The default is \code{"uniform distribution"}.
+#' distribution.\cr
+#' The default is \code{"uniform distribution"}.
 #' @return An object of class \code{"htest"} representing the result of the
 #' hypothesis test.
-#' @author Original C code by George Marsaglia and John Marsaglia.  interface
-#' by Adrian Baddeley.
+#' 
+#' @author 
+#' Original C code by George Marsaglia and John Marsaglia
+#' Interface by Adrian Baddeley.
 #' @seealso \code{\link{shapiro.test}} and all other tests for normality.
 #' @references Anderson, T.W. and Darling, D.A. (1952) Asymptotic theory of
 #' certain 'goodness-of-fit' criteria based on stochastic processes.
@@ -3335,6 +3568,7 @@ CramerVonMisesTest <- function (x) {
 #' Distribution.  \emph{Journal of Statistical Software} \bold{9} (2), 1--5.
 #' February 2004.  \url{http://www.jstatsoft.org/v09/i02}
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' x <- rnorm(10, mean=2, sd=1)
@@ -3343,8 +3577,8 @@ CramerVonMisesTest <- function (x) {
 AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 
   .recogniseCdf <- function(s="punif") {
-    if(!is.character(s) || length(s) != 1) return(NULL)
-    if(nchar(s) <= 1 || substr(s,1,1) != "p") return(NULL)
+    if (!is.character(s) || length(s) != 1) return(NULL)
+    if (nchar(s) <= 1 || substr(s,1,1) != "p") return(NULL)
     root <- substr(s, 2, nchar(s))
     a <- switch(root,
                 beta     = "beta",
@@ -3367,14 +3601,14 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
                 unif     = "uniform",
                 weibull  = "Weibull",
                 NULL)
-    if(!is.null(a))
+    if (!is.null(a))
       return(paste(a, "distribution"))
     b <- switch(root,
                 AD     = "Anderson-Darling",
                 CvM    = "Cramer-von Mises",
                 wilcox = "Wilcoxon Rank Sum",
                 NULL)
-    if(!is.null(b))
+    if (!is.null(b))
       return(paste("null distribution of", b, "Test Statistic"))
     return(NULL)
   }
@@ -3382,20 +3616,20 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 
   xname <- deparse(substitute(x))
   nulltext <- deparse(substitute(null))
-  if(is.character(null)) nulltext <- null
-  if(missing(nullname) || is.null(nullname)) {
+  if (is.character(null)) nulltext <- null
+  if (missing(nullname) || is.null(nullname)) {
     reco <- .recogniseCdf(nulltext)
-    nullname <- if(!is.null(reco)) reco else
+    nullname <- if (!is.null(reco)) reco else
       paste("distribution", sQuote(nulltext))
   }
   stopifnot(is.numeric(x))
   x <- as.vector(x)
   n <- length(x)
-  F0 <- if(is.function(null)) null else
-    if(is.character(null)) get(null, mode="function") else
+  F0 <- if (is.function(null)) null else
+    if (is.character(null)) get(null, mode="function") else
       stop("Argument 'null' should be a function, or the name of a function")
   U <- F0(x, ...)
-  if(any(U < 0 | U > 1))
+  if (any(U < 0 | U > 1))
     stop("null distribution function returned values outside [0,1]")
   U <- sort(U)
   k <- seq_len(n)
@@ -3413,7 +3647,7 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
               paste("Null hypothesis:", nullname))
   extras <- list(...)
   parnames <- intersect(names(extras), names(formals(F0)))
-  if(length(parnames) > 0) {
+  if (length(parnames) > 0) {
     pars <- extras[parnames]
     pard <- character(0)
     for(i in seq_along(parnames))
@@ -3435,14 +3669,14 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 .pAD <- function(q, n=Inf, lower.tail=TRUE, fast=TRUE) {
   q <- as.numeric(q)
   p <- rep(NA_real_, length(q))
-  if(any(ones <- is.infinite(q) & (q == Inf)))
+  if (any(ones <- is.infinite(q) & (q == Inf)))
     p[ones] <- 1
-  if(any(zeroes <- (is.finite(q) & q <= 0) | (is.infinite(q) & (q == -Inf))))
+  if (any(zeroes <- (is.finite(q) & q <= 0) | (is.infinite(q) & (q == -Inf))))
     p[zeroes] <- 0
   ok <- is.finite(q) & (q > 0)
   nok <- sum(ok)
-  if(nok > 0) {
-    if(is.finite(n)) {
+  if (nok > 0) {
+    if (is.finite(n)) {
       z <- .C("ADprobN",
               a       = as.double(q[ok]),
               na      = as.integer(nok),
@@ -3450,7 +3684,7 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
               prob    = as.double(numeric(nok))
       )
       p[ok] <- z$prob
-    } else if(fast) {
+    } else if (fast) {
       ## fast version adinf()
       z <- .C("ADprobApproxInf",
               a    = as.double(q[ok]),
@@ -3469,7 +3703,7 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
     }
 
   }
-  if(!lower.tail)
+  if (!lower.tail)
     p <- 1 - p
   return(p)
 }
@@ -3485,7 +3719,7 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 #     ## quantiles of null distribution of Anderson-Darling test statistic
 #     stopifnot(all(p >= 0))
 #     stopifnot(all(p <= 1))
-#     if(!lower.tail) p <- 1-p
+#     if (!lower.tail) p <- 1-p
 #     ans <- rep(NA_real_, length(p))
 #     for(i in which(p >= 0 & p < 1))
 #       ans[i] <- uniroot(f, c(0, 1), N=n, P=p[i], Fast=fast, extendInt="up")$root
@@ -3508,10 +3742,10 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 #
 #   # Author: Adrian Trapletti
 #
-#   if(NCOL(x) > 1)
+#   if (NCOL(x) > 1)
 #       stop("x is not a vector or univariate time series")
 #
-#   if(na.rm) x <- na.omit(x)
+#   if (na.rm) x <- na.omit(x)
 #
 #   DNAME <- deparse(substitute(x))
 #   n <- length(x)
@@ -3551,6 +3785,7 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 #' standard deviation (namely the mean absolute deviation from the median, as
 #' provided e. g. by \code{\link{MeanAD}(x, FUN=median)}) to estimate sample
 #' kurtosis and skewness. For more details see Gel and Gastwirth (2006). \cr
+#'
 #' Setting \code{robust} to \code{FALSE} will perform the original Jarque-Bera
 #' test (see Jarque, C. and Bera, A (1980)).
 #' 
@@ -3564,22 +3799,35 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 #' @param na.rm defines if \code{NAs} should be omitted. Default is
 #' \code{FALSE}.
 #' @return A list with class \code{htest} containing the following components:
-#' \item{statistic}{the value of the test statistic.} \item{parameter}{the
-#' degrees of freedom.} \item{p.value}{the p-value of the test.}
-#' \item{method}{type of test was performed.} \item{data.name}{a character
+#' \item{statistic}{the value of the test statistic.}
+#' \item{parameter}{the
+#' degrees of freedom.}
+#' \item{p.value}{the p-value of the test.}
+#' \item{method}{type of test was performed.}
+#' \item{data.name}{a character
 #' string giving the name of the data.}
-#' @note This function is melted from the \code{jarque.bera.test} (in
+#' 
+#' @note 
+#' This function is melted from the \code{jarque.bera.test} (in
 #' \code{tseries} package) and the \code{rjb.test} from the package
 #' \code{lawstat}.
-#' @author W. Wallace Hui, Yulia R. Gel, Joseph L. Gastwirth, Weiwen Miao
-#' @seealso Alternative tests for normality as \code{\link{shapiro.test}},
-#' \code{\link{AndersonDarlingTest}}, \code{\link{CramerVonMisesTest}},
-#' \code{\link{LillieTest}}, \code{\link{PearsonTest}},
+#' 
+#' @author 
+#' W. Wallace Hui, Yulia R. Gel, Joseph L. Gastwirth, Weiwen Miao
+#' 
+#' @seealso Alternative tests for normality as 
+#' \code{\link{shapiro.test}},
+#' \code{\link{AndersonDarlingTest}}, 
+#' \code{\link{CramerVonMisesTest}},
+#' \code{\link{LillieTest}}, 
+#' \code{\link{PearsonTest}},
 #' \code{\link{ShapiroFranciaTest}}
 #' 
-#' \code{\link{qqnorm}}, \code{\link{qqline}} for producing a normal
-#' quantile-quantile plot
-#' @references Gastwirth, J. L.(1982) \emph{Statistical Properties of A Measure
+#' \code{\link{qqnorm}}, 
+#' \code{\link{qqline}} for producing a normal  quantile-quantile plot
+#' 
+#' @references 
+#' Gastwirth, J. L.(1982) \emph{Statistical Properties of A Measure
 #' of Tax Assessment Uniformity}, Journal of Statistical Planning and Inference
 #' 6, 1-12.\cr
 #' 
@@ -3589,21 +3837,23 @@ AndersonDarlingTest <- function(x, null="punif", ..., nullname) {
 #' Jarque, C. and Bera, A. (1980) \emph{Efficient tests for normality,
 #' homoscedasticity and serial independence of regression residuals}, Economics
 #' Letters 6, 255-259.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' x <- rnorm(100)    # null hypothesis
 #' JarqueBeraTest(x)
 #' 
-#' x <- runif(100)    # alternative hypothesis
+#' x <- runif (100)    # alternative hypothesis
 #' JarqueBeraTest(x, robust=TRUE)
 #' 
-JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=FALSE) {
+JarqueBeraTest <- function(x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=FALSE) {
 
   method <- match.arg(method)
 
-  if (NCOL(x) > 1){ stop("x is not a vector or univariate time series") }
-  if(na.rm) x <- na.omit(x)
+  if (NCOL(x) > 1) { stop("x is not a vector or univariate time series") }
+  if (na.rm) x <- na.omit(x)
 
   if ((method == "mc") & (N==0)) {
     stop("number of Monte Carlo simulations N should be provided for the empirical critical values")
@@ -3620,7 +3870,7 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 
   ## User can choose the Standard Jarque Bera Test or Robust Jarque Bera Test
   ## Robust Jarque Bera Test is default
-  if(!robust) {
+  if (!robust) {
     b1 <- (m3/m2^(3/2))^2;
     b2 <- (m4/m2^2);
     statistic <- n * b1/6 + n * (b2 - 3)^2/24
@@ -3637,8 +3887,8 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 
   }
 
-  if(method == "mc"){
-    if(!robust) {
+  if (method == "mc") {
+    if (!robust) {
       ## computes empirical critical values for the JB statistic
 
       jb<-double(N)
@@ -3768,7 +4018,7 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 # ### http://imaging.mrc-cbu.cam.ac.uk/statswiki/FAQ/pagesL
 
 
-# if(missing(x))
+# if (missing(x))
 # stop("Usage: PageTest(x)\n\twhere x is a matrix of ranks")
 
 # dname <- deparse(substitute(x))
@@ -3814,10 +4064,10 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 # p.table <- NA
 # L <- sum(apply(x, 2, sum) * 1:dimx[2])
 
-# if((dimx[1] > 1 && dimx[1] < 13) && (dimx[2] > 3 && dimx[2] < 11))
+# if ((dimx[1] > 1 && dimx[1] < 13) && (dimx[2] > 3 && dimx[2] < 11))
 # Lval <- page.crit4plus[dimx[1]-1,dimx[2]-3,]
 
-# if((dimx[1] > 1 && dimx[1] < 21) && dimx[2] == 3)
+# if ((dimx[1] > 1 && dimx[1] < 21) && dimx[2] == 3)
 # Lval <- page.crit3[dimx[1]-1,]
 
 # p.table <-
@@ -3825,7 +4075,7 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 # #### print(Lval)
 
 # ### if there was no tabled value, calculate the normal approximation
-# if(length(Lval)<2) {
+# if (length(Lval)<2) {
 # munum <- dimx[1]*dimx[2]*(dimx[2]+1)*(dimx[2]+1)
 # muL <- munum/4
 # cat("muL =",muL,"\n")
@@ -3843,7 +4093,7 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 # #### class(ptt) <- "PageTest"
 # #### return(ptt)
 
-# if(is.na(p.table)) pval <- pZ else pval <- p.table
+# if (is.na(p.table)) pval <- pZ else pval <- p.table
 
 # RVAL <- list(statistic = c(L = L), p.value = pval, method = "Page test for ordered alternatives",
 # data.name = dname)
@@ -3857,7 +4107,7 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 # cat("\nPage test for ordered alternatives\n")
 # cat("L =",x$L)
 
-# if(is.na(x$p.table)) {
+# if (is.na(x$p.table)) {
 # plabel<-paste("Z =",x$Z,", p =",x$pZ,sep="",collapse="")
 # cat(plabel,x$p.chisq,"\n\n")
 # }
@@ -3880,10 +4130,14 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 #' The null hypothesis is that apart from an effect of \code{blocks}, the
 #' location parameter of \code{y} is the same in each of the \code{groups}.\cr
 #' The implemented alternative is, that the location parameter will be
-#' monotonly greater along the groups, \cr \eqn{H_{A}: \theta_{1} \le
+#' monotonly greater along the groups, \cr
+#' \eqn{H_{A}: \theta_{1} \le
 #' \theta_{2} \le \theta_{3}} ... (where at least one inequality is strict).\cr
+#'
 #' If the other direction is required, the order of the groups has to be
-#' reversed.  \cr\cr The Page test for ordered alternatives is slightly more
+#' reversed.  \cr
+#'\cr
+#' The Page test for ordered alternatives is slightly more
 #' powerful than the Friedman analysis of variance by ranks.
 #' 
 #' If \code{y} is a matrix, \code{groups} and \code{blocks} are obtained from
@@ -3916,15 +4170,23 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 #' contain \code{NA}s.  Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the L-statistic with names attribute
-#' \dQuote{L}.} \item{p.value}{the p-value of the test.} \item{method}{the
+#' components:
+#' \item{statistic}{the L-statistic with names attribute
+#' \dQuote{L}.}
+#' \item{p.value}{the p-value of the test.}
+#' \item{method}{the
 #' character string \code{"Page test for ordered alternatives"}.}
 #' \item{data.name}{a character string giving the names of the data.}
 #' @note Special thanks to Prof. S. Wellek for porting old GAUSS code to R.
-#' @author Stefan Wellek <stefan.wellek@@zi-mannheim.de> (exact p-values),
+#' 
+#' @author 
+#' Stefan Wellek <stefan.wellek@@zi-mannheim.de> (exact p-values),
 #' Andri Signorell <andri@@signorell.net> (interface) (strongly based on R-Core
 #' code)
-#' @seealso \code{\link{friedman.test}}
+#' 
+#' @seealso 
+#' \code{\link{friedman.test}}
+#' 
 #' @references Page, E. (1963): Ordered hypotheses for multiple treatments: A
 #' significance test for linear ranks. \emph{Journal of the American
 #' Statistical Association}, 58, 216-230.
@@ -3935,7 +4197,9 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 #' Wellek, S. (1989): Computing exact p-values in Page's nonparametric test
 #' against trend. \emph{Biometrie und Informatik in Medizin und Biologie 20},
 #' 163-170
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #'  # Craig's data from Siegel & Castellan, p 186
@@ -4002,12 +4266,14 @@ JarqueBeraTest <- function (x, robust=TRUE, method=c("chisq", "mc"), N=0, na.rm=
 #' 
 #' PageTest(score)
 #' 
-PageTest <- function (y, ...) UseMethod("PageTest")
+PageTest <- function(y, ...) {
+  UseMethod("PageTest")
+}
 
 
-PageTest.default <- function (y, groups, blocks, ...) {
+PageTest.default <- function(y, groups, blocks, ...) {
 
-  p.page <- function(k, n, L){
+  p.page <- function(k, n, L) {
 
     qvec <- .PageDF[k][[1]]
     f1 <- qvec
@@ -4055,7 +4321,7 @@ PageTest.default <- function (y, groups, blocks, ...) {
   nc <- ncol(y)
   nr <- nrow(y)
 
-  if(nc < 16){
+  if (nc < 16) {
     pval <- p.page(k=nc, n=nr, L=L)
   } else {
     mu <- nr * nc * (nc + 1)^2/4
@@ -4072,7 +4338,7 @@ PageTest.default <- function (y, groups, blocks, ...) {
 }
 
 
-PageTest.formula <- function (formula, data, subset, na.action, ...) {
+PageTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula))
     stop("formula missing")
@@ -4142,10 +4408,15 @@ PageTest.formula <- function (formula, data, subset, na.action, ...) {
 #' 
 #' \item{statistic}{the value of Cochran's chi-squared statistic.}
 #' \item{parameter}{the degrees of freedom of the approximate chi-squared
-#' distribution of the test statistic.} \item{p.value}{the p-value of the
-#' test.} \item{method}{the character string "Cochran's Q-Test".}
+#' distribution of the test statistic.}
+#' \item{p.value}{the p-value of the
+#' test.}
+#' \item{method}{the character string "Cochran's Q-Test".}
 #' \item{data.name}{a character string giving the names of the data.}
-#' @author Andri Signorell <andri@@signorell.net>
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>
+#'
 #' @examples
 #' 
 #' # example in: 
@@ -4165,7 +4436,7 @@ PageTest.formula <- function (formula, data, subset, na.action, ...) {
 #' # after having done the hard work of data organisation, performing the test is a piece of cake....
 #' CochranQTest(resp ~ time | id, data=d.long)
 #' 
-CochranQTest <- function(y, ...){
+CochranQTest <- function(y, ...) {
 
   # Cochran's Q Test is analogue to the friedman.test with 0,1 coded response
 
@@ -4175,14 +4446,14 @@ CochranQTest <- function(y, ...){
   return(res)
 }
 
-CochranQTest.default <- function(y, groups, blocks, ...){
+CochranQTest.default <- function(y, groups, blocks, ...) {
   res <- friedman.test(y, groups, blocks, ...)
   attr(res$statistic, "names") <- "Q"
   res$method <- "Cochran's Q test"
   return(res)
 }
 
-CochranQTest.formula <- function(formula, data, subset, na.action, ...){
+CochranQTest.formula <- function(formula, data, subset, na.action, ...) {
   res <- friedman.test(formula, data, subset, na.action, ...)
   attr(res$statistic, "names") <- "Q"
   res$method <- "Cochran's Q test"
@@ -4192,12 +4463,11 @@ CochranQTest.formula <- function(formula, data, subset, na.action, ...){
 
 
 
-#' Mantel-Haenszel Chi-Square Test %% ~~function to do ... ~~
+#' Mantel-Haenszel Chi-Square Test
 #' 
 #' The Mantel-Haenszel chi-square statistic tests the alternative hypothesis
 #' that there is a linear association between the row variable and the column
-#' variable. Both variables must lie on an ordinal scale. %% ~~ A concise (1-5
-#' lines) description of what the function does. ~~
+#' variable. Both variables must lie on an ordinal scale. 
 #' 
 #' The statistic is computed as \eqn{ Q_{MH} = (n-1) \cdot r^2}, where
 #' \eqn{r^2} is the Pearson correlation between the row variable and the column
@@ -4205,26 +4475,34 @@ CochranQTest.formula <- function(formula, data, subset, na.action, ...){
 #' by srow and scol. Under the null hypothesis of no association, \eqn{Q_{MH}}
 #' has an asymptotic chi-square distribution with one degree of freedom.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' @param x a frequency table or a matrix.  
+#' @param srow scores for the row variable, defaults to 1:nrow. 
+#' @param scol scores for the colummn variable, defaults to 1:ncol. 
 #' 
-#' @param x a frequency table or a matrix.  %% ~~Describe \code{tab} here~~
-#' @param srow scores for the row variable, defaults to 1:nrow. %% ~~Describe
-#' \code{srow} here~~
-#' @param scol scores for the colummn variable, defaults to 1:ncol. %%
-#' ~~Describe \code{scol} here~~
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the value the Mantel-Haenszel chi-squared test
-#' statistic.} \item{parameter}{the degrees of freedom of the approximate
-#' chi-squared distribution of the test statistic.} \item{p.value}{the p-value
-#' for the test.} \item{method}{a character string indicating the type of test
-#' performed.} \item{data.name}{a character string giving the name(s) of the
+#' components:
+#' \item{statistic}{the value the Mantel-Haenszel chi-squared test
+#' statistic.}
+#' \item{parameter}{the degrees of freedom of the approximate
+#' chi-squared distribution of the test statistic.}
+#' \item{p.value}{the p-value
+#' for the test.}
+#' \item{method}{a character string indicating the type of test
+#' performed.}
+#' \item{data.name}{a character string giving the name(s) of the
 #' data.}
-#' @author Andri Signorell <andri@@signorell.net> %% ~~who you are~~
-#' @seealso \code{\link{chisq.test}}, for calculating correlation of a table:
-#' \code{\link[boot]{corr}} %% ~~objects to See Also as \code{\link{help}}, ~~~
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net> 
+#' 
+#' @seealso
+#' \code{\link{chisq.test}}, for calculating correlation of a table:
+#' \code{\link[boot]{corr}}
+#' 
 #' @references Agresti, A. (2002) \emph{Categorical Data Analysis}. John Wiley
-#' & Sons, pp 86 ff. %% ~put references to the literature/web site here ~
+#' & Sons, pp 86 ff. 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## A r x c table  Agresti (2002, p. 57) Job Satisfaction
@@ -4235,13 +4513,13 @@ CochranQTest.formula <- function(formula, data, subset, na.action, ...){
 #' 
 #' MHChisqTest(Job, srow=c(7.5,20,32.5,60))
 #' 
-MHChisqTest <- function(x, srow=1:nrow(x), scol=1:ncol(x)){
+MHChisqTest <- function(x, srow=1:nrow(x), scol=1:ncol(x)) {
 
   # calculates Mantel-Haenszel Chisquare test
 
   # check for rxc 2-dim matrix
   p <- (d <- dim(x))[1L]
-  if(!is.numeric(x) || length(d) != 2L)
+  if (!is.numeric(x) || length(d) != 2L)
     stop("'x' is not a rxc numeric matrix")
 
   DNAME <- deparse(substitute(x))
@@ -4317,22 +4595,32 @@ MHChisqTest <- function(x, srow=1:nrow(x), scol=1:ncol(x)){
 #' @param p a vector of probabilities of the same length of \code{x}.  An error
 #' is given if any entry of \code{p} is negative.
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the value the chi-squared test statistic.}
+#' components:
+#' \item{statistic}{the value the chi-squared test statistic.}
 #' \item{parameter}{the degrees of freedom of the approximate chi-squared
 #' distribution of the test statistic, \code{NA} if the p-value is computed by
-#' Monte Carlo simulation.} \item{p.value}{the p-value for the test.}
+#' Monte Carlo simulation.}
+#' \item{p.value}{the p-value for the test.}
 #' \item{method}{a character string indicating the type of test performed, and
 #' whether Monte Carlo simulation or continuity correction was used.}
 #' \item{data.name}{a character string giving the name(s) of the data.}
-#' \item{observed}{the observed counts.} \item{expected}{the expected counts
+#' \item{observed}{the observed counts.}
+#' \item{expected}{the expected counts
 #' under the null hypothesis.}
-#' @author Pete Hurd <phurd@@ualberta.ca>
-#' @seealso \code{\link{chisq.test}}.
-#' @references Hope, A. C. A. (1968) A simplified Monte Carlo significance test
-#' procedure.  \emph{J. Roy, Statist. Soc. B} \bold{30}, 582--598.
 #' 
-#' Patefield, W. M. (1981) Algorithm AS159.  An efficient method of generating
-#' r x c tables with given row and column totals.  \emph{Applied Statistics}
+#' @author 
+#' Pete Hurd <phurd@@ualberta.ca>
+#' 
+#' @seealso 
+#' \code{\link{chisq.test}}.
+#' 
+#' 
+#' @references 
+#' Hope, A. C. A. (1968) A simplified Monte Carlo significance test
+#' procedure. \emph{J. Roy, Statist. Soc. B} \bold{30}, 582--598.
+#' 
+#' Patefield, W. M. (1981) Algorithm AS159. An efficient method of generating
+#' r x c tables with given row and column totals. \emph{Applied Statistics}
 #' \bold{30}, 91--97.
 #' 
 #' Agresti, A. (2007) \emph{An Introduction to Categorical Data Analysis, 2nd
@@ -4343,6 +4631,7 @@ MHChisqTest <- function(x, srow=1:nrow(x), scol=1:ncol(x)){
 #' New York. 937 pp.
 #' 
 #' @keywords htest distribution
+#'
 #' @examples
 #' 
 #' 
@@ -4374,7 +4663,7 @@ MHChisqTest <- function(x, srow=1:nrow(x), scol=1:ncol(x)){
 #' GTest(x, p = p)                #         maybe doubtful, but is ok!
 #' 
 #' ## Case B. Raw data
-#' x <- trunc(5 * runif(100))
+#' x <- trunc(5 * runif (100))
 #' GTest(table(x))                # NOT 'GTest(x)'!
 #' 
 GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1/length(x), length(x))) {
@@ -4389,7 +4678,7 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
   # GOF Yates' correction as described in Zar (2000)
   # more stuff taken from ctest's chisq.test()
   #
-  # ToDo:
+  # TODO:
   # 1) Beautify
   # 2) Add warnings for violations
   # 3) Make appropriate corrections happen by default
@@ -4426,10 +4715,10 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
     #Test of Independence
     nrows<-nrow(x)
     ncols<-ncol(x)
-    if (correct=="yates"){ # Do Yates' correction?
-      if(dim(x)[1]!=2 || dim(x)[2]!=2) # check for 2x2 matrix
+    if (correct=="yates") { # Do Yates' correction?
+      if (dim(x)[1]!=2 || dim(x)[2]!=2) # check for 2x2 matrix
         stop("Yates' correction requires a 2 x 2 matrix")
-      if((x[1,1]*x[2,2])-(x[1,2]*x[2,1]) > 0)
+      if ((x[1,1]*x[2,2])-(x[1,2]*x[2,1]) > 0)
       {
         #         x[1,1] <- x[1,1] - 0.5
         #         x[2,2] <- x[2,2] - 0.5
@@ -4456,15 +4745,15 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
     E <- outer(sr,sc, "*")/n
     # are we doing a monte-carlo?
     # no monte carlo GOF?
-    #     if (simulate.p.value){
+    #     if (simulate.p.value) {
     #       METHOD <- paste("Log likelihood ratio (G-test) test of independence\n\t with simulated p-value based on", B, "replicates")
     #       tmp <- .C("gtestsim", as.integer(nrows), as.integer(ncols),
     #                 as.integer(sr), as.integer(sc), as.integer(n), as.integer(B),
     #                 as.double(E), integer(nrows * ncols), double(n+1),
     #                 integer(ncols), results=double(B), PACKAGE= "ctest")
     #       g <- 0
-    #       for (i in 1:nrows){
-    #         for (j in 1:ncols){
+    #       for (i in 1:nrows) {
+    #         for (j in 1:ncols) {
     #           if (x[i,j] != 0) g <- g + x[i,j] * log(x[i,j]/E[i,j])
     #         }
     #       }
@@ -4476,26 +4765,26 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
     # no monte-carlo
     # calculate G
     g <- 0
-    for (i in 1:nrows){
-      for (j in 1:ncols){
+    for (i in 1:nrows) {
+      for (j in 1:ncols) {
         if (x[i,j] != 0) g <- g + x[i,j] * log(x[i,j]/E[i,j])
       }
       # }
       q <- 1
-      if (correct=="williams"){ # Do Williams' correction
+      if (correct=="williams") { # Do Williams' correction
         row.tot <- col.tot <- 0
-        for (i in 1:nrows){ row.tot <- row.tot + 1/(sum(x[i,])) }
-        for (j in 1:ncols){ col.tot <- col.tot + 1/(sum(x[,j])) }
+        for (i in 1:nrows) { row.tot <- row.tot + 1/(sum(x[i,])) }
+        for (j in 1:ncols) { col.tot <- col.tot + 1/(sum(x[,j])) }
         q <- 1+ ((n*row.tot-1)*(n*col.tot-1))/(6*n*(ncols-1)*(nrows-1))
       }
       STATISTIC <- G <- 2 * g / q
       PARAMETER <- (nrow(x)-1)*(ncol(x)-1)
       PVAL <- 1-pchisq(STATISTIC,df=PARAMETER)
-      if(correct=="none")
+      if (correct=="none")
         METHOD <- "Log likelihood ratio (G-test) test of independence without correction"
-      if(correct=="williams")
+      if (correct=="williams")
         METHOD <- "Log likelihood ratio (G-test) test of independence with Williams' correction"
-      if(correct=="yates")
+      if (correct=="yates")
         METHOD <- "Log likelihood ratio (G-test) test of independence with Yates' correction"
     }
   }
@@ -4508,25 +4797,25 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
       stop("x and p must have the same number of elements")
     E <- n * p
 
-    if (correct=="yates"){ # Do Yates' correction
-      if(length(x)!=2)
+    if (correct=="yates") { # Do Yates' correction
+      if (length(x)!=2)
         stop("Yates' correction requires 2 data values")
       if ( (x[1]-E[1]) > 0.25) {
         x[1] <- x[1]-0.5
         x[2] <- x[2]+0.5
       }
-      else if ( (E[1]-x[1]) > 0.25){
+      else if ( (E[1]-x[1]) > 0.25) {
         x[1] <- x[1]+0.5
         x[2] <- x[2]-0.5
       }
     }
     names(E) <- names(x)
     g <- 0
-    for (i in 1:length(x)){
+    for (i in 1:length(x)) {
       if (x[i] != 0) g <- g + x[i] * log(x[i]/E[i])
     }
     q <- 1
-    if (correct=="williams"){ # Do Williams' correction
+    if (correct=="williams") { # Do Williams' correction
       q <- 1+(length(x)+1)/(6*n)
     }
     STATISTIC <- G <- 2*g/q
@@ -4548,15 +4837,15 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
 
 
 
-#' Stuart-Maxwell Marginal Homogeneity Test %% ~~function to do ... ~~
+#' Stuart-Maxwell Marginal Homogeneity Test 
 #' 
 #' This function computes the marginal homogeneity test for a \eqn{k \times
 #' k}{k x k} matrix of assignments of objects to k categories or an \eqn{n
 #' \times 2 \times k}{n x 2} matrix of category scores for n data objects by
 #' two raters. The statistic is distributed as chi-square with k-1 degrees of
-#' freedom. \cr It can be viewed as an extention of McNemar test to \eqn{k
-#' \times k}{k x k} table.  %% ~~ A concise (1-5 lines) description of what the
-#' function does. ~~
+#' freedom. \cr
+#' It can be viewed as an extention of McNemar test to \eqn{k \times k}{k x k}
+#' table
 #' 
 #' The null is that the probabilities of being classified into cells [i,j] and
 #' [j,i] are the same.
@@ -4565,26 +4854,37 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
 #' hence its entries should be nonnegative integers. Otherwise, both x and y
 #' must be vectors or factors of the same length. Incomplete cases are removed,
 #' vectors are coerced into factors, and the contingency table is computed from
-#' these. %% ~~ If necessary, more details than the description above ~~
+#' these.
 #' 
 #' @param x either a 2-way contingency table in matrix form, or a factor
-#' object. %% ~~Describe \code{x} here~~
-#' @param y a factor object; ignored if x is a matrix. %% ~~Describe \code{y}
-#' here~~
+#' object. 
+#' @param y a factor object; ignored if x is a matrix.
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{statistic}{the value of the test statistic.}
-#' \item{parameter}{the degrees of freedom.} \item{p.value}{the p-value of the
-#' test.} \item{method}{a character string indicating what type of test was
-#' performed.} \item{data.name}{a character string giving the name of the
+#' components: 
+#' \item{statistic}{the value of the test statistic.}
+#' \item{parameter}{the degrees of freedom.} 
+#' \item{p.value}{the p-value of the
+#' test.} 
+#' \item{method}{a character string indicating what type of test was
+#' performed.} 
+#' \item{data.name}{a character string giving the name of the
 #' data.}
-#' @author Andri Signorell <andri@@signorell.net>, based on Code from Jim Lemon
-#' %% ~~who you are~~
-#' @seealso \code{\link{mcnemar.test}}, \code{\link{chisq.test}},
-#' \code{\link{MHChisqTest}}, \code{\link{BreslowDayTest}} %% ~~objects to See
-#' Also as \code{\link{help}}, ~~~
-#' @references Agresti, A. (2002) \emph{Categorical Data Analysis}. John Wiley
-#' & Sons, pp 86 ff. %% ~put references to the literature/web site here ~
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>, based on Code from Jim Lemon
+#' 
+#' @seealso 
+#' \code{\link{mcnemar.test}}, 
+#' \code{\link{chisq.test}},
+#' \code{\link{MHChisqTest}}, 
+#' \code{\link{BreslowDayTest}} 
+#' 
+#' @references 
+#' Agresti, A. (2002) \emph{Categorical Data Analysis}. John Wiley & Sons, 
+#' pp 86 ff.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' hyp <- as.table(matrix(c(20,3,0,10,30,5,5,15,40), nrow=3))
@@ -4597,7 +4897,7 @@ GTest <- function(x, y = NULL, correct=c("none", "williams", "yates"), p = rep(1
 #' 
 #' StuartMaxwellTest(mc)
 #' 
-StuartMaxwellTest <- function (x, y = NULL) {
+StuartMaxwellTest <- function(x, y = NULL) {
 
   # stuart.maxwell.mh computes the marginal homogeneity test for
   # a CxC matrix of assignments of objects to C categories or an
@@ -4636,11 +4936,11 @@ StuartMaxwellTest <- function (x, y = NULL) {
   colsums <- colSums(x)
   equalsums <- rowsums == colsums
 
-  if(any(equalsums)) {
+  if (any(equalsums)) {
     # dump any categories with perfect agreement
     x <- x[!equalsums, !equalsums]
     # bail out if too many categories have disappeared
-    if(dim(x)[1] < 2) stop("Too many equal marginals, cannot compute")
+    if (dim(x)[1] < 2) stop("Too many equal marginals, cannot compute")
     # get new marginals
     rowsums <- rowSums(x)
     colsums <- colSums(x)
@@ -4652,7 +4952,7 @@ StuartMaxwellTest <- function (x, y = NULL) {
   smS <- matrix(0, nrow=Kminus1, ncol=Kminus1)
   for(i in 1:Kminus1) {
     for(j in 1:Kminus1) {
-      if(i == j) smS[i,j] <- rowsums[i] + colsums[j] - 2 * x[i,j]
+      if (i == j) smS[i,j] <- rowsums[i] + colsums[j] - 2 * x[i,j]
       else smS[i,j] <- -(x[i,j] + x[j,i])
     }
   }
@@ -4677,13 +4977,11 @@ StuartMaxwellTest <- function (x, y = NULL) {
 
 
 
-#' Breslow-Day Test for Homogeneity of the Odds Ratios %% ~~function to do ...
-#' ~~
+#' Breslow-Day Test for Homogeneity of the Odds Ratios 
 #' 
 #' Calculates the Breslow-Day test of homogeneity for a \eqn{2 \times 2 \times
 #' k}{2 x 2 x k} table, in order to investigate if all \eqn{k} strata have the
-#' same OR. If OR is not given, the Mantel-Haenszel estimate is used. %% ~~ A
-#' concise (1-5 lines) description of what the function does. ~~
+#' same OR. If OR is not given, the Mantel-Haenszel estimate is used.
 #' 
 #' For the Breslow-Day test to be valid, the sample size should be relatively
 #' large in each stratum, and at least 80\% of the expected cell counts should
@@ -4700,17 +4998,21 @@ StuartMaxwellTest <- function (x, y = NULL) {
 #' term with the strata variable is necessary (e.g. using a likelihood ratio
 #' test using the \code{anova} function).
 #' 
-#' @param x a \eqn{2 \times 2 \times k}{2 x 2 x k} table. %% ~~Describe
-#' \code{x} here~~
+#' @param x a \eqn{2 \times 2 \times k}{2 x 2 x k} table. 
 #' @param OR the odds ratio to be tested against. If left undefined (default)
-#' the Mantel-Haenszel estimate will be used. %% ~~Describe \code{OR} here~~
+#' the Mantel-Haenszel estimate will be used.
 #' @param correct If TRUE, the Breslow-Day test with Tarone's adjustment is
 #' computed, which subtracts an adjustment factor to make the resulting
-#' statistic asymptotically chi-square. %% ~~Describe \code{printORi.s} here~~
-#' @author Michael Hoehle <hoehle@@math.su.se> %% ~~who you are~~
-#' @seealso \code{\link{WoolfTest}} %% ~~objects to See Also as
-#' \code{\link{help}}, ~~~
-#' @references Breslow, N. E., N. E. Day (1980) The Analysis of Case-Control
+#' statistic asymptotically chi-square. 
+#' 
+#' @author 
+#' Michael Hoehle <hoehle@@math.su.se> 
+#' 
+#' @seealso 
+#' \code{\link{WoolfTest}} 
+#' 
+#' @references 
+#' Breslow, N. E., N. E. Day (1980) The Analysis of Case-Control
 #' Studies \emph{Statistical Methods in Cancer Research: Vol. 1}. Lyon, France,
 #' IARC Scientific Publications.
 #' 
@@ -4724,8 +5026,8 @@ StuartMaxwellTest <- function (x, y = NULL) {
 #' Breslow, N. E. (1996) Statistics in Epidemiology: The Case-Control Study
 #' \emph{Journal of the American Statistical Association}, 91, 14-26.
 #' 
-#' %% ~put references to the literature/web site here ~
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' migraine <- xtabs(freq ~ .,
@@ -4784,7 +5086,7 @@ BreslowDayTest <- function(x, OR = NA, correct = FALSE) {
   #
 
 
-  if(is.na(OR)) {
+  if (is.na(OR)) {
     #Find the common OR based on Mantel-Haenszel
     or.hat.mh <- mantelhaen.test(x)$estimate
   } else {
@@ -4835,11 +5137,11 @@ BreslowDayTest <- function(x, OR = NA, correct = FALSE) {
 
   DNAME <- deparse(substitute(x))
 
-  STATISTIC <- if(correct) X2.HBDT else X2.HBD
+  STATISTIC <- if (correct) X2.HBDT else X2.HBD
   PARAMETER <- K - 1
   # Compute p-value based on the Tarone corrected test
   PVAL <- 1 - pchisq(STATISTIC, PARAMETER)
-  METHOD <- if(correct) "Breslow-Day Test on Homogeneity of Odds Ratios (with Tarone correction)" else
+  METHOD <- if (correct) "Breslow-Day Test on Homogeneity of Odds Ratios (with Tarone correction)" else
     "Breslow-Day test on Homogeneity of Odds Ratios"
   names(STATISTIC) <- "X-squared"
   names(PARAMETER) <- "df"
@@ -4874,7 +5176,7 @@ BreslowDayTest <- function(x, OR = NA, correct = FALSE) {
 #   #
 #
 #
-#   if(is.na(OR)) {
+#   if (is.na(OR)) {
 #     #Find the common OR based on Mantel-Haenszel
 #     or.hat.mh <- mantelhaen.test(x)$estimate
 #   } else {
@@ -4924,11 +5226,11 @@ BreslowDayTest <- function(x, OR = NA, correct = FALSE) {
 #
 #   DNAME <- deparse(substitute(x))
 #
-#   STATISTIC <- if(correct) X2.HBDT else X2.HBD
+#   STATISTIC <- if (correct) X2.HBDT else X2.HBD
 #   PARAMETER <- K - 1
 #   # Compute p-value based on the Tarone corrected test
 #   PVAL <- 1 - pchisq(STATISTIC, PARAMETER)
-#   METHOD <- if(correct) "Breslow-Day Test on Homogeneity of Odds Ratios (with Tarone correction)" else
+#   METHOD <- if (correct) "Breslow-Day Test on Homogeneity of Odds Ratios (with Tarone correction)" else
 #     "Breslow-Day test on Homogeneity of Odds Ratios"
 #   names(STATISTIC) <- "X-squared"
 #   names(PARAMETER) <- "df"
@@ -4953,20 +5255,35 @@ BreslowDayTest <- function(x, OR = NA, correct = FALSE) {
 #' @param x a \eqn{2 \times 2 \times k}{2 x 2 x k} table, where the last
 #' dimension refers to the strata.
 #' @return A list of class \code{"htest"} containing the following components:
-#' \item{statistic}{the chi-squared test statistic.} \item{parameter}{degrees
+#' \item{statistic}{the chi-squared test statistic.}
+#' \item{parameter}{degrees
 #' of freedom of the approximate chi-squared distribution of the test
-#' statistic.} \item{p.value}{\eqn{p}-value for the test.} \item{method}{a
-#' character string indicating the type of test performed.} \item{data.name}{a
-#' character string giving the name(s) of the data.} \item{observed}{the
-#' observed counts.} \item{expected}{the expected counts under the null
+#' statistic.}
+#' \item{p.value}{\eqn{p}-value for the test.}
+#' \item{method}{a
+#' character string indicating the type of test performed.}
+#' \item{data.name}{a
+#' character string giving the name(s) of the data.}
+#' \item{observed}{the
+#' observed counts.}
+#' \item{expected}{the expected counts under the null
 #' hypothesis.}
 #' @note This function was previously published as \code{woolf_test()} in the
 #' \pkg{vcd} package and has been integrated here without logical changes.
-#' @author David Meyer, Achim Zeileis, Kurt Hornik, Michael Friendly
-#' @seealso \code{\link{mantelhaen.test}}, \code{\link{BreslowDayTest}}
-#' @references Woolf, B. 1955: On estimating the relation between blood group
+#' 
+#' @author 
+#' David Meyer, Achim Zeileis, Kurt Hornik, Michael Friendly
+#' 
+#' @seealso 
+#' \code{\link{mantelhaen.test}}, 
+#' \code{\link{BreslowDayTest}}
+#' 
+#' @references
+#'  Woolf, B. 1955: On estimating the relation between blood group
 #' and disease. \emph{Ann. Human Genet.} (London) \bold{19}, 251-253.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' migraine <- xtabs(freq ~ .,
@@ -5003,11 +5320,10 @@ WoolfTest <- function(x) {
 
 
 
-#' Lehmacher's Test for Marginal Homogenity %% ~~function to do ... ~~
+#' Lehmacher's Test for Marginal Homogenity
 #' 
 #' Performs Lehmacher's chi-squared test for marginal homogenity in a symmetric
-#' two-dimensional contingency table. %% ~~ A concise (1-5 lines) description
-#' of what the function does. ~~
+#' two-dimensional contingency table.
 #' 
 #' The null is that the probabilities of being classified into cells [i,j] and
 #' [j,i] are the same.
@@ -5016,39 +5332,47 @@ WoolfTest <- function(x) {
 #' hence its entries should be nonnegative integers. Otherwise, both x and y
 #' must be vectors or factors of the same length. Incomplete cases are removed,
 #' vectors are coerced into factors, and the contingency table is computed from
-#' these. %% ~~ If necessary, more details than the description above ~~
+#' these.
 #' 
 #' @aliases LehmacherTest print.mtest
 #' @param x either a two-dimensional contingency table in matrix form, or a
-#' factor object. %% ~~Describe \code{x} here~~
-#' @param y a factor object; ignored if x is a matrix. %% ~~Describe \code{y}
-#' here~~
+#' factor object.
+#' @param y a factor object; ignored if x is a matrix.
 #' @param digits a non-null value for digits specifies the minimum number of
 #' significant digits to be printed in values. See details in
 #' \code{\link{print.default}}.
 #' @param \dots further arguments to be passed to or from other methods. They
 #' are ignored in this function.
 #' @return A list with class \code{"mtest"} containing the following
-#' components: \item{statistic}{a vector with the value of the test
-#' statistics.} \item{parameter}{the degrees of freedom, which is always 1 in
-#' LehmacherTest.} \item{p.value}{a vector with the p-values of the single
-#' tests.} \item{p.value.corr}{a vector with the "hochberg" adjusted p-values
-#' of the single tests. (See \code{\link{p.adjust}})} \item{method}{a character
-#' string indicating what type of test was performed.} \item{data.name}{a
+#' components:
+#' \item{statistic}{a vector with the value of the test
+#' statistics.}
+#' \item{parameter}{the degrees of freedom, which is always 1 in
+#' LehmacherTest.}
+#' \item{p.value}{a vector with the p-values of the single
+#' tests.}
+#' \item{p.value.corr}{a vector with the "hochberg" adjusted p-values
+#' of the single tests. (See \code{\link{p.adjust}})}
+#' \item{method}{a character
+#' string indicating what type of test was performed.}
+#' \item{data.name}{a
 #' character string giving the name of the data.}
 #' 
-#' %% ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
-#' @author Andri Signorell <andri@@signorell.net> %% ~~who you are~~
-#' @seealso \code{\link{mcnemar.test}} (resp. BowkerTest for a CxC-matrix),
-#' \code{\link{StuartMaxwellTest}}, \code{\link{WoolfTest}} %% ~~objects to See
-#' Also as \code{\link{help}}, ~~~
-#' @references Lehmacher, W. (1980) Simultaneous sign tests for marginal
+#' @author 
+#' Andri Signorell <andri@@signorell.net> 
+#' 
+#' @seealso 
+#' \code{\link{mcnemar.test}} (resp. BowkerTest for a CxC-matrix),
+#' \code{\link{StuartMaxwellTest}}, 
+#' \code{\link{WoolfTest}}
+#' 
+#' @references 
+#' Lehmacher, W. (1980) Simultaneous sign tests for marginal
 #' homogeneity of square contingency tables \emph{Biometrical Journal}, Volume
 #' 22, Issue 8, pages 795-798
 #' 
-#' %% ~put references to the literature/web site here ~
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' x <- matrix(c(400,40,20,10, 
@@ -5100,7 +5424,7 @@ LehmacherTest <- function(x, y = NULL) {
 }
 
 
-print.mtest <- function (x, digits = 4L, ...) {
+print.mtest <- function(x, digits = 4L, ...) {
 
   cat("\n")
   cat(strwrap(x$method, prefix = "\t"), sep = "\n")
@@ -5114,7 +5438,7 @@ print.mtest <- function (x, digits = 4L, ...) {
                       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
                       symbols = c("***", "**", "*", ".", " ")))
   colnames(out) <- c("X-squared", "pval", "pval adj", " ")
-  rownames(out) <- if(is.null(rownames(x))) 1:length(x$statistic) else rownames(x)
+  rownames(out) <- if (is.null(rownames(x))) 1:length(x$statistic) else rownames(x)
   print.default(out, digits = 3, quote = FALSE, right = TRUE)
 
   cat("\n")
@@ -5127,7 +5451,7 @@ print.mtest <- function (x, digits = 4L, ...) {
 
 
 
-#' Cochran-Armitage Test for Trend %% ~~function to do ... ~~
+#' Cochran-Armitage Test for Trend
 #' 
 #' Perform a Cochran Armitage test for trend in binomial proportions across the
 #' levels of a single variable. This test is appropriate only when one variable
@@ -5137,38 +5461,39 @@ print.mtest <- function (x, digits = 4L, ...) {
 #' which means that the binomial proportion is the same for all levels of the
 #' explanatory variable.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
 #' 
-#' 
-#' @param x a frequency table or a matrix. %% ~~Describe \code{x} here~~
+#' @param x a frequency table or a matrix.
 #' @param alternative a character string specifying the alternative hypothesis,
 #' must be one of \code{"two.sided"} (default), \code{"increasing"} or
-#' \code{"decreasing"}. You can specify just the initial letter. %% ~~Describe
-#' \code{alternative} here~~
+#' \code{"decreasing"}. You can specify just the initial letter. 
 #' @return A list of class \code{htest}, containing the following components:
-#' \item{statistic}{ the z-statistic of the test.} \item{parameter}{ the
-#' dimension of the table.} \item{p.value}{ the p-value for the test.}
+#' \item{statistic}{ the z-statistic of the test.}
+#' \item{parameter}{ the
+#' dimension of the table.}
+#' \item{p.value}{ the p-value for the test.}
 #' \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{the character string \dQuote{Cochran-Armitage
-#' test for trend}.} \item{data.name}{a character string giving the names of
+#' hypothesis.}
+#' \item{method}{the character string \dQuote{Cochran-Armitage
+#' test for trend}.}
+#' \item{data.name}{a character string giving the names of
 #' the data.}
 #' 
-#' %% ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
-#' @author Andri Signorell <andri@@signorell.net> strongly based on code from
+#' @author 
+#' Andri Signorell <andri@@signorell.net> strongly based on code from
 #' Eric Lecoutre <lecoutre@@stat.ucl.ac.be>\cr
 #' \url{https://stat.ethz.ch/pipermail/r-help/2005-July/076371.html}
-#' @seealso \code{\link{prop.trend.test}} %% ~~objects to See Also as
-#' \code{\link{help}}, ~~~
-#' @references Agresti, A. (2002) \emph{Categorical Data Analysis}. John Wiley
-#' & Sons
 #' 
-#' %% ~put references to the literature/web site here ~
+#' @seealso \code{\link{prop.trend.test}} 
+#' @references 
+#' Agresti, A. (2002) \emph{Categorical Data Analysis}. John Wiley & Sons
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' # http://www.lexjansen.com/pharmasug/2007/sp/sp05.pdf, pp. 4
-#' dose <- matrix(c(10,9,10,7, 0,1,0,3), byrow=TRUE, nrow=2, dimnames=list(resp=0:1, dose=0:3))
+#' dose <- matrix(c(10,9,10,7, 0,1,0,3), byrow=TRUE, nrow=2, 
+#'   dimnames=list(resp=0:1, dose=0:3))
 #' Desc(dose)
 #' 
 #' CochranArmitageTest(dose, "increasing")
@@ -5273,21 +5598,32 @@ CochranArmitageTest <- function(x, alternative = c("two.sided","increasing","dec
 #' must be one of \code{"two.sided"} (default), \code{"greater"} or
 #' \code{"less"}.  You can specify just the initial letter.
 #' @return A list with class \code{"htest"} containing the following
-#' components: \item{p.value}{the p-value of the test.} \item{estimate}{an
+#' components:
+#' \item{p.value}{the p-value of the test.}
+#' \item{estimate}{an
 #' estimate of the nuisance parameter where the p-value is maximized.}
 #' \item{alternative}{a character string describing the alternative
-#' hypothesis.} \item{method}{the character string \code{"Barnards
-#' Unconditional 2x2-test"}.} \item{data.name}{a character string giving the
-#' names of the data.} \item{statistic.table }{The contingency tables
+#' hypothesis.}
+#' \item{method}{the character string \code{"Barnards
+#' Unconditional 2x2-test"}.}
+#' \item{data.name}{a character string giving the
+#' names of the data.}
+#' \item{statistic.table }{The contingency tables
 #' considered in the analysis represented by 'n1' and 'n2', their scores, and
 #' whether they are included in the one-sided (1), two-sided (2) tests, or not
-#' included at all (0)} \item{nuisance.matrix }{Nuisance parameters, \eqn{p},
+#' included at all (0)}
+#' \item{nuisance.matrix }{Nuisance parameters, \eqn{p},
 #' and the corresponding p-values for both one- and two-sided tests}
 #' 
-#' @author Kamil Erguler, <k.erguler@@cyi.ac.cy>, Peter Calhoun
-#' <calhoun.peter@@gmail.com>, Rodrigo Duprat, Andri Signorell
-#' <andri@@signorell.net> (interface)
-#' @seealso \code{\link{fisher.test}}
+#' @author 
+#' Kamil Erguler, <k.erguler@@cyi.ac.cy>, 
+#' Peter Calhoun <calhoun.peter@@gmail.com>, 
+#' Rodrigo Duprat, 
+#' Andri Signorell <andri@@signorell.net> (interface)
+#' 
+#' @seealso 
+#' \code{\link{fisher.test}}
+#' 
 #' @references Barnard, G.A. (1945) A new test for 2x2 tables. \emph{Nature},
 #' 156:177.
 #' 
@@ -5313,7 +5649,9 @@ CochranArmitageTest <- function(x, alternative = c("two.sided","increasing","dec
 #' Rodriguez-Cardozo N.A. Ramos-Delgado and R. Garcia-Sanchez. (2004).
 #' Barnardextest:Barnard's Exact Probability Test. A MATLAB file. [WWW
 #' document]. \url{http://www.mathworks.com/}
+#' 
 #' @keywords nonparametric htest
+#'
 #' @examples
 #' 
 #' tab <- as.table(matrix(c(8, 14, 1, 3), nrow=2,
@@ -5342,7 +5680,7 @@ CochranArmitageTest <- function(x, alternative = c("two.sided","increasing","dec
 #'      col=c("black", "white")[1 + as.numeric(bts[, 4]==btw[, 4])],
 #'      t="p", xlab="n1", ylab="n2")
 #' 
-BarnardTest <- function (x, y = NULL, alternative = c("two.sided", "less", "greater"), dp = 0.001, pooled = TRUE ) {
+BarnardTest <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), dp = 0.001, pooled = TRUE ) {
 
   if (is.matrix(x)) {
     r <- nrow(x)
@@ -5383,7 +5721,7 @@ BarnardTest <- function (x, y = NULL, alternative = c("two.sided", "less", "grea
   mat.size <- 4.0 * prod(rowSums(x) + 1) # (n1 + n3 + 1) * (n2 + n4 + 1)
 
 
-  if(pooled)
+  if (pooled)
     ret1 <- .C( "ScoreS",
                 as.integer(x[1]), as.integer(x[2]), as.integer(x[3]), as.integer(x[4]),
                 as.numeric(dp),
@@ -5426,7 +5764,7 @@ BarnardTest <- function (x, y = NULL, alternative = c("two.sided", "less", "grea
 
 
   STATISTIC <- ret1$statistic
-  if(alternative == "two.sided"){
+  if (alternative == "two.sided") {
     PVAL <- ret2$nuisance.vector.y1[np1]
     ESTIMATE <- c(`Nuisance parameter` = ret2$nuisance.vector.x[np1])
   } else {
@@ -5484,19 +5822,32 @@ BarnardTest <- function (x, y = NULL, alternative = c("two.sided", "less", "grea
 #' @param fill starting values for the lagged residuals in the auxiliary
 #' regression. By default \code{0} but can also be set to \code{NA}.
 #' @return A list with class \code{"BreuschGodfreyTest"} inheriting from
-#' \code{"htest"} containing the following components: \item{statistic}{the
-#' value of the test statistic.} \item{p.value}{the p-value of the test.}
-#' \item{parameter}{degrees of freedom.} \item{method}{a character string
-#' indicating what type of test was performed.} \item{data.name}{a character
-#' string giving the name(s) of the data.} \item{coefficients}{coefficient
-#' estimates from the auxiliary regression.} \item{vcov}{corresponding
+#' \code{"htest"} containing the following components:
+#' \item{statistic}{the
+#' value of the test statistic.}
+#' \item{p.value}{the p-value of the test.}
+#' \item{parameter}{degrees of freedom.}
+#' \item{method}{a character string
+#' indicating what type of test was performed.}
+#' \item{data.name}{a character
+#' string giving the name(s) of the data.}
+#' \item{coefficients}{coefficient
+#' estimates from the auxiliary regression.}
+#' \item{vcov}{corresponding
 #' covariance matrix estimate.}
 #' @note This function was previously published as \code{bgtest} in the
 #' \pkg{lmtest} package and has been integrated here without logical changes.
-#' @author David Mitchell <david.mitchell@@dotars.gov.au>, Achim Zeileis
-#' @seealso \code{\link[DescTools]{DurbinWatsonTest}}
-#' @references Johnston, J. (1984): \emph{Econometric Methods}, Third Edition,
-#' McGraw Hill Inc.
+#' 
+#' @author 
+#' David Mitchell <david.mitchell@@dotars.gov.au>,
+#' Achim Zeileis
+#' 
+#' @seealso 
+#' \code{\link[DescTools]{DurbinWatsonTest}}
+#' 
+#' @references 
+#' Johnston, J. (1984): \emph{Econometric Methods}, Third Edition, McGraw Hill 
+#' Inc.
 #' 
 #' Godfrey, L.G. (1978): `Testing Against General Autoregressive and Moving
 #' Average Error Models when the Regressors Include Lagged Dependent
@@ -5504,7 +5855,9 @@ BarnardTest <- function (x, y = NULL, alternative = c("two.sided", "less", "grea
 #' 
 #' Breusch, T.S. (1979): `Testing for Autocorrelation in Dynamic Linear
 #' Models', \emph{Australian Economic Papers}, 17, 334-355.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Generate a stationary and an AR(1) series
@@ -5531,11 +5884,11 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
 
   dname <- paste(deparse(substitute(formula)))
 
-  if(!inherits(formula, "formula")) {
-    X <- if(is.matrix(formula$x))
+  if (!inherits(formula, "formula")) {
+    X <- if (is.matrix(formula$x))
       formula$x
     else model.matrix(terms(formula), model.frame(formula))
-    y <- if(is.vector(formula$y))
+    y <- if (is.vector(formula$y))
       formula$y
     else model.response(model.frame(formula))
   } else {
@@ -5544,9 +5897,9 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
     X <- model.matrix(formula, data = data)
   }
 
-  if(!is.null(order.by))
+  if (!is.null(order.by))
   {
-    if(inherits(order.by, "formula")) {
+    if (inherits(order.by, "formula")) {
       z <- model.matrix(order.by, data = data)
       z <- as.vector(z[,ncol(z)])
     } else {
@@ -5563,7 +5916,7 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
   resi <- lm.fit(X,y)$residuals
 
   Z <- sapply(order, function(x) c(rep(fill, length.out = x), resi[1:(n-x)]))
-  if(any(na <- !complete.cases(Z))) {
+  if (any(na <- !complete.cases(Z))) {
     X <- X[!na, , drop = FALSE]
     Z <- Z[!na, , drop = FALSE]
     y <- y[!na]
@@ -5606,7 +5959,7 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
 
 
 # vcov.BreuschGodfreyTest <- function(object, ...) object$vcov
-# df.residual.BreuschGodfreyTest <- function(object, ...) if(length(df <- object$parameter) > 1L) df[2] else NULL
+# df.residual.BreuschGodfreyTest <- function(object, ...) if (length(df <- object$parameter) > 1L) df[2] else NULL
 
 
 
@@ -5650,16 +6003,26 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
 #' freedom, F-statistics and p-values. For \code{EtaSq.aovlist}, additional
 #' columns contain the error sum of squares and error degrees of freedom
 #' corresponding to an effect term.
-#' @author Daniel Navarro <daniel.navarro@@adelaide.edu.au>, Daniel
-#' Wollschlaeger <dwoll@@psychologie.uni-kiel.de>
-#' @seealso \code{\link{aov}}, \code{\link{anova}}, \code{\link[car]{Anova}}
-#' @references Bakeman, R. (2005). Recommended effect size statistics for
+#' 
+#' @author 
+#' Daniel Navarro <daniel.navarro@@adelaide.edu.au>,
+#' Daniel Wollschlaeger <dwoll@@psychologie.uni-kiel.de>
+#' 
+#' @seealso 
+#' \code{\link{aov}}, 
+#' \code{\link{anova}}, 
+#' \code{\link[car]{Anova}}
+#' 
+#' @references 
+#' Bakeman, R. (2005). Recommended effect size statistics for
 #' repeated measures designs. Behavior Research Methods 37(3), 379-384.
 #' 
 #' Olejnik, S. and Algina, J. (2003). Generalized Eta and Omega Squared
 #' Statistics: Measures of Effect Size for Some Common Research Designs.
 #' Psychological Methods 8(4), 434-447.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' #### Example 1: one-way ANOVA ####
@@ -5681,11 +6044,21 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
 #' #### data from Maxwell & Delaney, 2004              ####
 #' #### Designing experiments and analyzing data       ####
 #' 
-#' dfMD <- data.frame(IV1=factor(rep(1:3, c(3+5+7, 5+6+4, 5+4+6))),
-#'                    IV2=factor(rep(rep(1:3, 3), c(3,5,7, 5,6,4, 5,4,6))),
-#'                    DV=c(c(41, 43, 50), c(51, 43, 53, 54, 46), c(45, 55, 56, 60, 58, 62, 62),
-#'                         c(56, 47, 45, 46, 49), c(58, 54, 49, 61, 52, 62), c(59, 55, 68, 63),
-#'                         c(43, 56, 48, 46, 47), c(59, 46, 58, 54), c(55, 69, 63, 56, 62, 67)))
+#' dfMD <- data.frame(
+#'   IV1 = factor(rep(1:3, c(3 + 5 + 7, 5 + 6 + 4, 5 + 4 + 6))),
+#'   IV2 = factor(rep(rep(1:3, 3), c(3, 5, 7, 5, 6, 4, 5, 4, 6))),
+#'   DV = c(
+#'     c(41, 43, 50),
+#'     c(51, 43, 53, 54, 46),
+#'     c(45, 55, 56, 60, 58, 62, 62),
+#'     c(56, 47, 45, 46, 49),
+#'     c(58, 54, 49, 61, 52, 62),
+#'     c(59, 55, 68, 63),
+#'     c(43, 56, 48, 46, 47),
+#'     c(59, 46, 58, 54),
+#'     c(55, 69, 63, 56, 62, 67)
+#'   )
+#' )
 #' 
 #' # use contr.sum for correct sum of squares type 3
 #' dfMD$IV1s <- C(dfMD$IV1, "contr.sum")
@@ -5708,11 +6081,11 @@ BreuschGodfreyTest <- function(formula, order = 1, order.by = NULL, type = c("Ch
 #' spf <- aov(DV ~ IVbtw*IVwth + Error(id/IVwth), data=dfSPF)
 #' EtaSq(spf, type=1, anova=TRUE)
 #' 
-EtaSq <- function (x, type = 2, anova = FALSE) {
+EtaSq <- function(x, type = 2, anova = FALSE) {
   UseMethod("EtaSq")
 }
 
-EtaSq.lm <- function (x, type = 2, anova = FALSE) {
+EtaSq.lm <- function(x, type = 2, anova = FALSE) {
 
   # file:    etaSquared.R
   # author:  Dan Navarro
@@ -5768,10 +6141,10 @@ EtaSq.lm <- function (x, type = 2, anova = FALSE) {
         IVs <- names(attr(model.matrix(x), "contrasts"))
         ## only relevant for more than one factor
         ## (and for unbalanced cell sizes and interactions, not tested here)
-        if(length(IVs) > 1) {
+        if (length(IVs) > 1) {
           isSumToZero <- function(IV) {
             ## check if factor has directly associated contrasts
-            if(!is.null(attr(x$model[, IV], "contrasts"))) {
+            if (!is.null(attr(x$model[, IV], "contrasts"))) {
               cm <- contrasts(x$model[, IV])
               all(colSums(cm) == 0)
             } else {
@@ -5782,7 +6155,7 @@ EtaSq.lm <- function (x, type = 2, anova = FALSE) {
 
           valid <- vapply(IVs, isSumToZero, logical(1))
 
-          if(!all(valid)) {
+          if (!all(valid)) {
             warning(c(ifelse(sum(!valid) > 1, "Factors ", "Factor "),
                       paste(IVs[!valid], collapse=", "),
                       ifelse(sum(!valid) > 1, " are", " is"),
@@ -5833,7 +6206,7 @@ EtaSq.lm <- function (x, type = 2, anova = FALSE) {
 }
 
 
-EtaSq.aovlist <-  function (x, type = 2, anova = FALSE) {
+EtaSq.aovlist <-  function(x, type = 2, anova = FALSE) {
 
   # author:  Daniel Wollschlaeger
   # contact: contact@dwoll.de
@@ -5914,7 +6287,7 @@ aovlDetails <- function(aovObj) {
     at  <- DescTools::StrTrim(rownames(tab)) # all terms
     tt  <- at[-which(at == "Residuals")]     # tested terms only
 
-    if(length(tt) > 0)
+    if (length(tt) > 0)
     {
       # error terms
       etRes <- list(df=tab["Residuals", "Df"],
@@ -5965,37 +6338,41 @@ aovlErrorTerms <- function(aovObj) {
 
 
 
-#' Greenhouse-Geisser And Huynh-Feldt Epsilons %% ~~function to do ... ~~
+# TODO: examples are missing
+
+#' Greenhouse-Geisser And Huynh-Feldt Epsilons 
 #' 
-#' Calculate Greenhouse-Geisser and Huynh-Feldt epsilons. %% ~~ A concise (1-5
-#' lines) description of what the function does. ~~
-#' 
+#' Calculate Greenhouse-Geisser and Huynh-Feldt epsilons. 
 #' 
 #' @param S p x p covariance matrix
 #' @param p dimension of observation vectors
 #' @param g number of groups
 #' @param n number of subjects
 #' @return a numeric value
-#' @author Hans Rudolf Roth <hroth@@retired.ethz.ch> %% ~~who you are~~
-#' @seealso \code{\link{aov}} %% ~~objects to See Also as \code{\link{help}},
-#' ~~~
-#' @references Vonesh, E.F., Chinchilli, V.M. (1997) \emph{Linear and Nonlinear
+#' 
+#' @author 
+#' Hans Rudolf Roth <hroth@@retired.ethz.ch> 
+#' 
+#' @seealso 
+#' \code{\link{aov}}
+#' 
+#' @references 
+#' Vonesh, E.F., Chinchilli, V.M. (1997) \emph{Linear and Nonlinear
 #' Models for the Analysis of Repeated Measurements} Marcel Dekker, New York,
 #' p.84-86
 #' 
 #' Crowder, M.J., Hand, D.J. (1990) \emph{Analysis of Repeated Measures}.
-#' Chapman & Hall, London, p.54-55 %% ~put references to the literature/web
-#' site here ~
+#' Chapman & Hall, London, p.54-55 
 #' @keywords models regression
+#'
 #' @examples
 #' 
 #' ## find!
-#' 
-#' 
+
 Eps <- function(S, p, g, n) {
 
   ## Purpose: calculates the Greenhouse-Geisser and Huynh-Feldt epsilons
-  ## -------------------------------------------------------------------
+  ## ------------------------------------------------------------------~
   ## Arguments: S pxp covariance matrix
   ##            p dimension of observation vectors
   ##            g number of groups
@@ -6006,7 +6383,7 @@ Eps <- function(S, p, g, n) {
 
   ## Author: H.-R. Roth
   ## Date:   23.07.2002
-  ## -------------------------------------------------------------------
+  ## ------------------------------------------------------------------~
 
   # U is a matrix of (p-1) orthonormal contrasts
   U <- t(cbind(diag(p-1),0) - outer(1:(p-1), 1:p, "<") / ((p-1):1))
@@ -6047,12 +6424,20 @@ Eps <- function(S, p, g, n) {
 #' @note \code{\link{uniroot}} is used to solve power equation for unknowns, so
 #' you may see errors from it, notably about inability to bracket the root when
 #' invalid arguments are given.
-#' @author Stephane Champely <champely@@univ-lyon1.fr> \cr but this is a mere
-#' copy of Peter Dalgaard's work on power.t.test
-#' @seealso \code{\link{power.t.test}}
-#' @references Cohen, J. (1988) \emph{Statistical power analysis for the
+#' 
+#' @author 
+#' Stephane Champely <champely@@univ-lyon1.fr> \cr
+#' but this is a mere copy of Peter Dalgaard's work on power.t.test
+#' 
+#' @seealso
+#' \code{\link{power.t.test}}
+#' 
+#' @references 
+#' Cohen, J. (1988) \emph{Statistical power analysis for the
 #' behavioral sciences (2nd ed.)} Hillsdale, NJ: Lawrence Erlbaum.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Exercise 7.1 P. 249 from Cohen (1988) 
@@ -6064,7 +6449,7 @@ Eps <- function(S, p, g, n) {
 #' ## Exercise 7.8 p. 270
 #' power.chisq.test(w=0.1, df=(5-1)*(6-1), power=0.80, sig.level=0.05)
 #' 
-power.chisq.test <- function (n = NULL, w = NULL, df = NULL, sig.level = 0.05, power = NULL) {
+power.chisq.test <- function(n = NULL, w = NULL, df = NULL, sig.level = 0.05, power = NULL) {
 
   if (sum(sapply(list(w, n, df, power, sig.level), is.null)) != 1)
     stop("exactly one of w, n, df, power or sig.level must be NULL")
@@ -6102,22 +6487,25 @@ power.chisq.test <- function (n = NULL, w = NULL, df = NULL, sig.level = 0.05, p
 
 
 
-#' Pairwise Contrasts %% ~~function to do ... ~~
+#' Pairwise Contrasts
 #' 
 #' Generate all pairwise contrasts for using in a post-hoc test, e.g.
-#' ScheffeTest. %% ~~ A concise (1-5 lines) description of what the function
-#' does. ~~
+#' ScheffeTest.
 #' 
 #' 
-#' @param levs the levels to be used %% ~~Describe \code{levs} here~~
+#' @param levs the levels to be used
+#' 
 #' @return A matrix with all possible pairwise contrasts, that can be built
-#' with the given levels. %% ~Describe the value returned %% If it is a LIST,
-#' use %% \item{comp1 }{Description of 'comp1'} %% \item{comp2 }{Description of
-#' 'comp2'} %% ...
-#' @author Andri Signorell <andri@@signorell.net> %% ~~who you are~~
-#' @seealso \code{\link{ScheffeTest}} %% ~~objects to See Also as
-#' \code{\link{help}}, ~~~
+#' with the given levels. 
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net> 
+#' 
+#' @seealso 
+#' \code{\link{ScheffeTest}} 
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' Contrasts(LETTERS[1:5])
@@ -6130,7 +6518,7 @@ power.chisq.test <- function (n = NULL, w = NULL, df = NULL, sig.level = 0.05, p
 #' # E   0   0   0   1   0   0   1   0   1   1
 #' 
 #' 
-Contrasts <- function (levs) {
+Contrasts <- function(levs) {
   k = length(levs)
   M = data.frame(levs = levs)
   for (i in 1:(k - 1)) {
@@ -6151,35 +6539,31 @@ Contrasts <- function (levs) {
 
 
 
-#' Scheffe Test for Pairwise and Otherwise Comparisons %% ~~function to do ...
-#' ~~
+#' Scheffe Test for Pairwise and Otherwise Comparisons
 #' 
 #' Scheffe's method applies to the set of estimates of all possible contrasts
 #' among the factor level means, not just the pairwise differences considered
-#' by Tukey's method.  %% ~~ A concise (1-5 lines) description of what the
-#' function does. ~~
+#' by Tukey's method.
 #' 
 #' 
 #' @aliases ScheffeTest ScheffeTest.default ScheffeTest.aov
 #' @param x either a fitted model object, usually an \code{\link{aov}} fit,
 #' when g is left to \code{NULL} or a response variable to be evalutated by g
-#' (which mustn't be \code{NULL} then). %% ~~Describe \code{x} here~~
-#' @param g the grouping variable. %% ~~Describe \code{g} here~~
+#' (which mustn't be \code{NULL} then). 
+#' @param g the grouping variable.
 #' @param which character vector listing terms in the fitted model for which
-#' the intervals should be calculated. Defaults to all the terms. %% ~~Describe
-#' \code{which} here~~
+#' the intervals should be calculated. Defaults to all the terms.
 #' @param contrasts a \eqn{r \times c}{r x c} matrix containing the contrasts
 #' to be computed, while \code{r} is the number of factor levels and \code{c}
 #' the number of contrasts. Each column must contain a full contrast ("sum")
 #' adding up to 0. Note that the argument \code{which} must be defined, when
 #' non default contrasts are used.  Default value of \code{contrasts} is
-#' \code{NULL}. In this case all pairwise contrasts will be reported. %%
-#' ~~Describe \code{contrasts} here~~
+#' \code{NULL}. In this case all pairwise contrasts will be reported.
 #' @param conf.level numeric value between zero and one giving the confidence
 #' level to use.  If this is set to NA, just a matrix with the p-values will be
-#' returned. %% ~~Describe \code{conf.level} here~~
-#' @param \dots further arguments, currently not used. %% ~~Describe
-#' \code{\dots} here~~
+#' returned. 
+#' @param \dots further arguments, currently not used.
+#' 
 #' @return A list of classes \code{c("PostHocTest")}, with one component for
 #' each term requested in \code{which}. Each component is a matrix with columns
 #' \code{diff} giving the difference in the observed means, \code{lwr.ci}
@@ -6190,15 +6574,22 @@ Contrasts <- function (levs) {
 #' There are print and plot methods for class \code{"PostHocTest"}. The plot
 #' method does not accept \code{xlab}, \code{ylab} or \code{main} arguments and
 #' creates its own values for each plot.
-#' @author Andri Signorell <andri@@signorell.net> %% ~~who you are~~
-#' @seealso \code{\link{pairwise.t.test}}, \code{\link{TukeyHSD}} %% ~~objects
-#' to See Also as \code{\link{help}}, ~~~
-#' @references Robert O. Kuehl, Steel R. (2000) \emph{Design of experiments}.
-#' Duxbury
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net> 
+#' 
+#' @seealso 
+#' \code{\link{pairwise.t.test}},
+#' \code{\link{TukeyHSD}} 
+#' 
+#' @references 
+#' Robert O. Kuehl, Steel R. (2000) \emph{Design of experiments}. Duxbury
 #' 
 #' Steel R.G.D., Torrie J.H., Dickey, D.A. (1997) \emph{Principles and
 #' Procedures of Statistics, A Biometrical Approach}. McGraw-Hill
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
@@ -6218,28 +6609,29 @@ Contrasts <- function (levs) {
 #' r.aov <- aov(y ~ group)
 #' 
 #' ScheffeTest(r.aov, contrasts=matrix( c(1,-0.5,-0.5,0,0,0,
-#'                                        0,0,0,1,-0.5,-0.5), ncol=2) )
+#'                                        0,0,0,1,-0.5,-0.5), ncol=2))
 #' 
 #' # just p-values:
 #' ScheffeTest(r.aov, conf.level=NA)
 #' 
-ScheffeTest <- function (x, ...)
+ScheffeTest <- function(x, ...) {
   UseMethod("ScheffeTest")
+}
 
-ScheffeTest.default <- function (x, g = NULL, which = NULL, contrasts = NULL, conf.level = 0.95, ...) {
+ScheffeTest.default <- function(x, g = NULL, which = NULL, contrasts = NULL, conf.level = 0.95, ...) {
   ScheffeTest(x=aov(x~g), which=which, contrasts=contrasts, conf.level=conf.level, ...)
 }
 
 
 
-ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ...){
+ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ...) {
 
   mm <- model.tables(x, "means")
   if (is.null(mm$n))
     stop("no factors in the fitted model")
   tabs <- mm$tables[-1L]
 
-  if(is.null(which)) which <- seq_along(tabs)
+  if (is.null(which)) which <- seq_along(tabs)
 
   tabs <- tabs[which]
   nn <- mm$n[names(tabs)]
@@ -6255,7 +6647,7 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
   MSE <- sum(x$residuals^2)/x$df.residual
 
   autoContr <- is.null(contrasts)
-  if(!is.null(contrasts)){
+  if (!is.null(contrasts)) {
     contrasts <- data.frame(contrasts)
   }
 
@@ -6273,7 +6665,7 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
     if (length(n) < length(means))
       n <- rep.int(n, length(means))
 
-    if(autoContr) contrasts <- Contrasts(nms)
+    if (autoContr) contrasts <- Contrasts(nms)
 
     psi <- apply(contrasts * means, 2, sum)
     sscoeff <- apply(contrasts * contrasts / n, 2, sum)
@@ -6297,15 +6689,15 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
     out[[nm]] <- cbind(diff=psi, lwr, upr, pval)
     colnames(out[[nm]]) <- c("diff","lwr.ci","upr.ci","pval")
 
-    if(!autoContr) {
+    if (!autoContr) {
       # define contrasts rownames
       rownames(out[[nm]]) <-  apply(contrasts, 2, function(x)
         gettextf("%s-%s", paste(nms[x>0], collapse=","),
                  paste(nms[x<0], collapse=",")) )
-      if(is.na(conf.level)) out[[nm]] <- out[[nm]][,-c(2:3)]
+      if (is.na(conf.level)) out[[nm]] <- out[[nm]][,-c(2:3)]
     }
 
-    if(autoContr & is.na(conf.level)) {
+    if (autoContr & is.na(conf.level)) {
       out[[nm]] <- matrix(NA, nrow=length(means), ncol=length(means))
       out[[nm]][lower.tri(out[[nm]], diag = FALSE)] <- pval
       dimnames(out[[nm]]) <- list(nms, nms)
@@ -6329,15 +6721,16 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 
 
 
-#' Post-Hoc Tests %% ~~function to do ... ~~
+#' Post-Hoc Tests
 #' 
 #' A convenience wrapper for computing post-hoc test after having calculated an
-#' ANOVA. %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' ANOVA.
 #' 
 #' The function is designed to consolidate a couple of post-hoc tests with the
 #' same interface for input and output.
 #' 
-#' Choosing Tests\cr Different Post Hoc tests use different methods to control
+#' Choosing Tests\cr
+#' Different Post Hoc tests use different methods to control
 #' FW and PE. Some tests are very conservative. Conservative tests go to great
 #' lengths to prevent the user from committing a Type I error.  They use more
 #' stringent criterion for determining significance. Many of these tests become
@@ -6350,7 +6743,8 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' for choosing. Mostly it is an issue of pragmatics and whether the number of
 #' comparisons exceeds K-1.
 #' 
-#' Fisher's LSD\cr The Fisher LSD (Least Significant Different) sets Alpha
+#' Fisher's LSD\cr
+#' The Fisher LSD (Least Significant Different) sets Alpha
 #' Level per comparison. Alpha = .05 for every comparison. df = df error (i.e.
 #' df within). This test is the most liberal of all Post Hoc tests. The
 #' critical t for significance is unaffected by the number of groups. This test
@@ -6360,7 +6754,8 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' you have more than 3 means unless there is reason to believe that there is
 #' no more than one true Null Hypothesis hidden in the means.
 #' 
-#' Dunn's (Bonferroni)\cr Dunn's t-test is sometimes referred to as the
+#' Dunn's (Bonferroni)\cr
+#' Dunn's t-test is sometimes referred to as the
 #' Bonferroni t because it used the Bonferroni PE correction procedure in
 #' determining the critical value for significance. In general, this test
 #' should be used when the number of comparisons you are making exceeds the
@@ -6370,7 +6765,8 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' conservative and rapidly reduces power as the number of comparisons being
 #' made increase.
 #' 
-#' Newman-Keuls\cr Newman-Keuls is a step down procedure that is not as
+#' Newman-Keuls\cr
+#' Newman-Keuls is a step down procedure that is not as
 #' conservative as Dunn's t test. First, the means of the groups are ordered
 #' (ascending or descending) and then the largest and smallest means are tested
 #' for significant differences. If those means are different, then test
@@ -6384,7 +6780,8 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' when the number of comparisons we are making is larger than K-1 and we don't
 #' want to be as conservative as the Dunn's test is.
 #' 
-#' Tukey's HSD\cr Tukey HSD (Honestly Significant Difference) is essentially
+#' Tukey's HSD\cr
+#' Tukey HSD (Honestly Significant Difference) is essentially
 #' like the Newman-Keul, but the tests between each mean are compared to the
 #' critical value that is set for the test of the means that are furthest apart
 #' (rmax e.g. if there are 5 means we use the critical value determined for the
@@ -6397,7 +6794,8 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' make all the possible comparisons between a large set of means (Six or more
 #' means).
 #' 
-#' Scheffe\cr The Scheffe Test is designed to protect against a Type I error
+#' Scheffe\cr
+#' The Scheffe Test is designed to protect against a Type I error
 #' when all possible complex and simple comparisons are made. That is we are
 #' not just looking the possible combinations of comparisons between pairs of
 #' means. We are also looking at the possible combinations of comparisons
@@ -6411,45 +6809,50 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' when you want to make many Post Hoc complex comparisons (e.g. more than
 #' K-1).
 #' 
-#' Tables\cr For tables pairwise chi-square test can be performed, either
+#' Tables\cr
+#' For tables pairwise chi-square test can be performed, either
 #' without correction or with correction for multiple testing following the
-#' logic in \code{\link{p.adjust}}. %% ~~ If necessary, more details than the
-#' description above ~~
+#' logic in \code{\link{p.adjust}}.
 #' 
 #' @aliases PostHocTest PostHocTest.aov PostHocTest.table PostHocTest.matrix
 #' print.PostHocTest plot.PostHocTest
-#' @param x an aov object. %% ~~Describe \code{x} here~~
+#' @param x an aov object. 
 #' @param method one of \code{"hsd"}, \code{"bonf"}, \code{"lsd"},
 #' \code{"scheffe"}, \code{"newmankeuls"}, defining the method for the pairwise
-#' comparisons.\cr For the post hoc test of tables the methods of
-#' \code{\link{p.adjust}} can be supplied. See the detail there. %% ~~Describe
-#' \code{method} here~~
+#' comparisons.\cr
+#' For the post hoc test of tables the methods of
+#' \code{\link{p.adjust}} can be supplied. See the detail there. 
 #' @param which a character vector listing terms in the fitted model for which
-#' the intervals should be calculated. Defaults to all the terms. %% ~~Describe
-#' \code{method} here~~
+#' the intervals should be calculated. Defaults to all the terms. 
 #' @param conf.level a numeric value between zero and one giving the
 #' family-wise confidence level to use.  If this is set to NA, just a matrix
-#' with the p-values will be returned. %% ~~Describe \code{x} here~~
+#' with the p-values will be returned. 
 #' @param ordered a logical value indicating if the levels of the factor should
 #' be ordered according to increasing average in the sample before taking
 #' differences. If ordered is \code{TRUE} then the calculated differences in
 #' the means will all be positive. The significant differences will be those
-#' for which the lower end point is positive. \cr This argument will be ignored
+#' for which the lower end point is positive. \cr
+#' This argument will be ignored
 #' if method is not either \code{hsd} or \code{newmankeuls}.
 #' @param digits controls the number of fixed digits to print.
-#' @param \dots further arguments, not used so far. %% ~~Describe \code{\dots}
-#' here~~
-#' @return an object of type "PostHocTest", which will either be \cr A) a list
-#' of data.frames containing the mean difference, lower ci, upper ci and the
-#' p-value, if a conf.level was defined (something else than NA) or \cr B) a
-#' list of matrices with the p-values, if conf.level has been set to NA. %%
-#' ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
-#' @author Andri Signorell <andri@@signorell.net> %% ~~who you are~~
-#' @seealso \code{\link{TukeyHSD}}, \code{\link{aov}},
-#' \code{\link{pairwise.t.test}}, \code{\link{ScheffeTest}} %% ~~objects to See
-#' Also as \code{\link{help}}, ~~~
+#' @param \dots further arguments, not used so far. 
+#' @return an object of type "PostHocTest", which will either be \cr
+#' A) a list of data.frames containing the mean difference, lower ci, upper ci 
+#' and the
+#' p-value, if a conf.level was defined (something else than NA) or \cr 
+#' B) a list of matrices with the p-values, if conf.level has been set to NA.
+#'  
+#' @author 
+#' Andri Signorell <andri@@signorell.net> 
+#' 
+#' @seealso 
+#' \code{\link{TukeyHSD}}, 
+#' \code{\link{aov}},
+#' \code{\link{pairwise.t.test}}, 
+#' \code{\link{ScheffeTest}}
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' PostHocTest(aov(breaks ~ tension, data = warpbreaks), method = "lsd")
@@ -6468,18 +6871,18 @@ ScheffeTest.aov <- function(x, which=NULL, contrasts = NULL, conf.level=0.95, ..
 #' PostHocTest(aov(breaks ~ tension, data = warpbreaks), method = "hsd",
 #'             conf.level=NA)
 #' 
-PostHocTest <- function (x, ...)
+PostHocTest <- function(x, ...) {
   UseMethod("PostHocTest")
+}
 
 
-
-PostHocTest.aov <- function (x, which = NULL,
+PostHocTest.aov <- function(x, which = NULL,
                              method=c("hsd","bonferroni","lsd","scheffe","newmankeuls","duncan"),
                              conf.level = 0.95, ordered = FALSE, ...) {
 
   method <- match.arg(method)
 
-  if(method=="scheffe"){
+  if (method=="scheffe") {
     out <- ScheffeTest(x=x, which=which, conf.level=conf.level, ...)
 
   } else {
@@ -6489,7 +6892,7 @@ PostHocTest.aov <- function (x, which = NULL,
       stop("no factors in the fitted model")
     tabs <- mm$tables[-1L]
 
-    if(is.null(which)) which <- seq_along(tabs)
+    if (is.null(which)) which <- seq_along(tabs)
     tabs <- tabs[which]
 
     nn <- mm$n[names(tabs)]
@@ -6595,7 +6998,7 @@ PostHocTest.aov <- function (x, which = NULL,
              }
       )
 
-      if(!is.na(conf.level)){
+      if (!is.na(conf.level)) {
         dnames <- list(NULL, c("diff", "lwr.ci", "upr.ci", "pval"))
         if (!is.null(nms))
           dnames[[1L]] <- outer(nms, nms, paste, sep = "-")[keep]
@@ -6639,7 +7042,7 @@ PostHocTest.matrix <- function(x, method = c("none","fdr","BH","BY","bonferroni"
   pvals <- DescTools::PairApply(t(as.matrix(x)), FUN = function(y1, y2) chisq.test(cbind(y1,y2))$p.value, symmetric=TRUE)
   pvals[upper.tri(pvals, diag=TRUE)] <- NA
 
-  if(method != "none")
+  if (method != "none")
     pvals[] <- p.adjust(pvals, method=method)
 
   #  pvals[] <- format.pval(pvals, digits = 2, na.form = "-")
@@ -6668,7 +7071,7 @@ PostHocTest.table <- function(x, method = c("none","fdr","BH","BY","bonferroni",
 
 
 
-print.PostHocTest <- function (x, digits = getOption("digits", 3), ...) {
+print.PostHocTest <- function(x, digits = getOption("digits", 3), ...) {
 
   cat(attr(x, "method.str"))
   if (!is.na(attr(x, "conf.level")))
@@ -6676,7 +7079,7 @@ print.PostHocTest <- function (x, digits = getOption("digits", 3), ...) {
         sep = "")
   if (attr(x, "ordered"))
     cat("    factor levels have been ordered\n")
-  if(!is.language(attr(x, "orig.call")) && !is.null(attr(x, "orig.call")))
+  if (!is.language(attr(x, "orig.call")) && !is.null(attr(x, "orig.call")))
     cat("\nFit: ", deparse(attr(x, "orig.call"), 500L), "\n\n", sep = "")
   else
     cat("\n")
@@ -6687,9 +7090,9 @@ print.PostHocTest <- function (x, digits = getOption("digits", 3), ...) {
 
   xx["data.name"] <- NULL
 
-  if(!is.na(attr(x, "conf.level"))) {
+  if (!is.na(attr(x, "conf.level"))) {
     xx <- lapply(xx, as.data.frame)
-    for(nm in names(xx)){
+    for(nm in names(xx)) {
       xx[[nm]]$" " <- Format(xx[[nm]]$"pval", fmt="*")
       xx[[nm]]$"pval" <- format.pval(xx[[nm]]$"pval", digits=2, nsmall=4)
     }
@@ -6697,7 +7100,7 @@ print.PostHocTest <- function (x, digits = getOption("digits", 3), ...) {
     print.default(xx, digits=digits, ...)
     cat("---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
   } else {
-    for(nm in names(xx)){
+    for(nm in names(xx)) {
       xx[[nm]][] <- format.pval(xx[[nm]], 2, na.form = "-")
     }
     #     attributes(pp) <- attributes(x$p.value)
@@ -6710,7 +7113,7 @@ print.PostHocTest <- function (x, digits = getOption("digits", 3), ...) {
 
 
 
-plot.PostHocTest <- function(x, ...){
+plot.PostHocTest <- function(x, ...) {
   # original:   stats:::plot.TukeyHSD(x, ...)
 
   # don't need that here..
@@ -6797,18 +7200,27 @@ plot.PostHocTest <- function(x, ...){
 #' @param digits controls the number of fixed digits to print.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class \code{"DunnTest"} containing the following
-#' components: \item{res}{an array containing the mean rank differencens and
+#' components:
+#' \item{res}{an array containing the mean rank differencens and
 #' the according p-values}
-#' @author Andri Signorell <andri@@signorell.net>, the interface is based on
-#' R-Core code
-#' @seealso \code{\link{kruskal.test}}, \code{\link{wilcox.test}},
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>, the interface is based on R-Core code
+#' 
+#' @seealso 
+#' \code{\link{kruskal.test}}, 
+#' \code{\link{wilcox.test}},
 #' \code{\link{p.adjust}}
-#' @references Dunn, O. J. (1961) Multiple comparisons among means
+#' 
+#' @references 
+#' Dunn, O. J. (1961) Multiple comparisons among means
 #' \emph{Journal of the American Statistical Association}, 56(293):52-64.
 #' 
 #' Dunn, O. J. (1964) Multiple comparisons using rank sums
 #' \emph{Technometrics}, 6(3):241-252.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Hollander & Wolfe (1973), 116.
@@ -6837,15 +7249,16 @@ plot.PostHocTest <- function(x, ...){
 #' boxplot(Ozone ~ Month, data = airquality)
 #' DunnTest(Ozone ~ Month, data = airquality)
 #' 
-DunnTest <- function (x, ...)
+DunnTest <- function(x, ...) {
   UseMethod("DunnTest")
+}
 
 
+DunnTest.formula <- function(formula, data, subset, na.action, ...) {
 
-DunnTest.formula <- function (formula, data, subset, na.action, ...) {
-
-  if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
-                                                                  "term.labels")) != 1L))
+  if (missing(formula) ||
+      (length(formula) != 3L) || 
+      (length(attr(terms(formula[-2L]), "term.labels")) != 1L))
     stop("'formula' missing or incorrect")
   m <- match.call(expand.dots = FALSE)
   if (is.matrix(eval(m$data, parent.frame())))
@@ -6866,7 +7279,7 @@ DunnTest.formula <- function (formula, data, subset, na.action, ...) {
 
 
 
-DunnTest.default <- function (x, g, method = c("holm","hochberg","hommel","bonferroni","BH","BY","fdr","none"),
+DunnTest.default <- function(x, g, method = c("holm","hochberg","hommel","bonferroni","BH","BY","fdr","none"),
                               alternative = c("two.sided", "less", "greater"),
                               out.list = TRUE, ...) {
 
@@ -6937,7 +7350,7 @@ DunnTest.default <- function (x, g, method = c("holm","hochberg","hommel","bonfe
   pvals <- p.adjust(pvals, method=method)
   method.str <- method
 
-  if(out.list){
+  if (out.list) {
     dnames <- list(NULL, c("mean rank diff", "pval"))
     if (!is.null(nms))
       dnames[[1L]] <- outer(nms, nms, paste, sep = "-")[keep]
@@ -6963,12 +7376,12 @@ DunnTest.default <- function (x, g, method = c("holm","hochberg","hommel","bonfe
 
 
 
-print.DunnTest <- function (x, digits = getOption("digits", 3), ...) {
+print.DunnTest <- function(x, digits = getOption("digits", 3), ...) {
 
   cat("\n", attr(x, "main"), "\n\n")
   xx <- unclass(x)
 
-  if(attr(x, "out.list")==TRUE) {
+  if (attr(x, "out.list")==TRUE) {
     xx <- data.frame(x[1])
     xx$" " <- Format(xx$"pval", fmt="*")
     xx$"pval" <- format.pval(xx$"pval", digits=2, nsmall=4)
@@ -6999,7 +7412,8 @@ print.DunnTest <- function (x, digits = getOption("digits", 3), ...) {
 #' Conover's test is more powerful than Dunn's post hoc multiple comparisons
 #' test (\code{\link{DunnTest}}). The interpretation of stochastic dominance
 #' requires an assumption that the CDF of one group does not cross the CDF of
-#' the other. \cr ConoverTest makes m = k(k-1)/2 multiple pairwise comparisons
+#' the other. \cr
+#' ConoverTest makes m = k(k-1)/2 multiple pairwise comparisons
 #' based on the Conover-Iman t-test-statistic for the rank-sum differences:
 #' \deqn{\left | \bar{R}_{i}-\bar{R}_{j} \right | > t_{1-\alpha/2, n-k} \cdot
 #' \sqrt{ s^2 \cdot \left [ \frac{n-1-\hat{H}^*}{n-k} \right ] \cdot \left [
@@ -7044,19 +7458,29 @@ print.DunnTest <- function (x, digits = getOption("digits", 3), ...) {
 #' contain \code{NA}s.  Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list with class \code{"DunnTest"} containing the following
-#' components: \item{res}{an array containing the mean rank differencens and
+#' components:
+#' \item{res}{an array containing the mean rank differencens and
 #' the according p-values}
-#' @author Andri Signorell <andri@@signorell.net>, the interface is based on
-#' R-Core code
-#' @seealso \code{\link{DunnTest}}, \code{\link{NemenyiTest}},
-#' \code{\link{kruskal.test}}, \code{\link{wilcox.test}},
+#' 
+#' @author
+#' Andri Signorell <andri@@signorell.net>, the interface is based on R-Core code
+#' 
+#' @seealso 
+#' \code{\link{DunnTest}},
+#' \code{\link{NemenyiTest}},
+#' \code{\link{kruskal.test}}, 
+#' \code{\link{wilcox.test}},
 #' \code{\link{p.adjust}}
-#' @references Conover W. J., Iman R. L. (1979) On multiple-comparisons
+#' 
+#' @references 
+#' Conover W. J., Iman R. L. (1979) On multiple-comparisons
 #' procedures, \emph{Tech. Rep.} LA-7677-MS, Los Alamos Scientific Laboratory.
 #' 
 #' Conover, W. J. (1999) Practical Nonparametric Statistics \emph{Wiley},
 #' Hoboken, NJ. 3rd edition.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Hollander & Wolfe (1973), 116.
@@ -7085,11 +7509,11 @@ print.DunnTest <- function (x, digits = getOption("digits", 3), ...) {
 #' boxplot(Ozone ~ Month, data = airquality)
 #' ConoverTest(Ozone ~ Month, data = airquality)
 #' 
-ConoverTest <- function (x, ...)
+ConoverTest <- function(x, ...) {
   UseMethod("ConoverTest")
+}
 
-
-ConoverTest.default <- function (x, g,
+ConoverTest.default <- function(x, g,
   method = c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"),
   alternative = c("two.sided", "less", "greater"), out.list = TRUE, ...) {
 
@@ -7164,8 +7588,8 @@ ConoverTest.default <- function (x, g,
     dnames <- list(NULL, c("mean rank diff", "pval"))
     if (!is.null(nms))
       dnames[[1L]] <- outer(nms, nms, paste, sep = "-")[keep]
-    out[[1]] <- array(c(mrnkdiff[keep], pvals), c(length(mrnkdiff[keep]),
-                                                  2L), dnames)
+    out[[1]] <- array(c(mrnkdiff[keep], pvals),
+      c(length(mrnkdiff[keep]), 2L), dnames)
   } else {
     out[[1]] <- matrix(NA, nrow = length(nms), ncol = length(nms))
     out[[1]][lower.tri(out[[1]], diag = FALSE)] <- pvals
@@ -7186,10 +7610,11 @@ ConoverTest.default <- function (x, g,
 
 
 
-ConoverTest.formula <- function (formula, data, subset, na.action, ...) {
+ConoverTest.formula <- function(formula, data, subset, na.action, ...) {
 
-  if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
-                                                                  "term.labels")) != 1L))
+  if (missing(formula) ||
+      (length(formula) != 3L) ||
+      (length(attr(terms(formula[-2L]), "term.labels")) != 1L))
     stop("'formula' missing or incorrect")
   m <- match.call(expand.dots = FALSE)
   if (is.matrix(eval(m$data, parent.frame())))
@@ -7231,19 +7656,17 @@ ConoverTest.formula <- function (formula, data, subset, na.action, ...) {
 
 
 
-
-#' Nemenyi Test %% ~~function to do ... ~~
+# TODO!! Tell when to use this test. References needed!
+# 
+#' Nemenyi Test 
 #' 
-#' Performs Nemenyi's test of multiple comparisons. %% ~~ A concise (1-5 lines)
-#' description of what the function does. ~~
+#' Performs Nemenyi's test of multiple comparisons.
 #' 
-#' %% ToDo!! Tell when to use this test. References needed! Nemenyi proposed a
+#' Nemenyi proposed a
 #' test based on rank sums and the application of the family-wise error method
 #' to control Type I error inflation, if multiple comparisons are done. The
 #' Tukey and Kramer approach uses mean rank sums and can be employed for
 #' equally as well as unequally sized samples without ties.
-#' 
-#' %% ~~ If necessary, more details than the description above ~~
 #' 
 #' @aliases NemenyiTest NemenyiTest.default NemenyiTest.formula
 #' @param x a numeric vector of data values, or a list of numeric data vectors.
@@ -7265,15 +7688,24 @@ ConoverTest.formula <- function (formula, data, subset, na.action, ...) {
 #' contain \code{NA}s.  Defaults to \code{getOption("na.action")}.
 #' @param \dots further arguments to be passed to or from methods.
 #' @return A list of class \code{htest}, containing the following components:
-#' \item{statistic}{ Nemenyi test} \item{p.value}{ the p-value for the test}
+#' \item{statistic}{ Nemenyi test}
+#' \item{p.value}{ the p-value for the test}
 #' \item{null.value}{is the value of the median specified by the null
-#' hypothesis. This equals the input argument \code{mu}. } \item{alternative}{a
-#' character string describing the alternative hypothesis.} \item{method}{ the
-#' type of test applied} \item{data.name}{a character string giving the names
+#' hypothesis. This equals the input argument \code{mu}. }
+#' \item{alternative}{a
+#' character string describing the alternative hypothesis.}
+#' \item{method}{ the
+#' type of test applied}
+#' \item{data.name}{a character string giving the names
 #' of the data.}
-#' @author Andri Signorell <andri@@signorell.net>
-#' @seealso \code{\link{DunnTest}}, \code{\link{ConoverTest}} %% ~~objects to
-#' See Also as \code{\link{help}}, ~~~
+#' 
+#' @author 
+#' Andri Signorell <andri@@signorell.net>
+#' 
+#' @seealso 
+#' \code{\link{DunnTest}}, 
+#' \code{\link{ConoverTest}} 
+#' 
 #' @references Nemenyi, P. B. (1963) \emph{Distribution-Free Multiple
 #' Comparisons} New York, State University of New York, Downstate Medical
 #' Center
@@ -7287,7 +7719,9 @@ ConoverTest.formula <- function (formula, data, subset, na.action, ...) {
 #' 
 #' Friedman, M. (1940) A comparison of alternative tests of significance for
 #' the problem of m rankings \emph{Annals of Mathematical Statistics}, 11:86-92
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Hollander & Wolfe (1973), 116.
@@ -7319,11 +7753,11 @@ ConoverTest.formula <- function (formula, data, subset, na.action, ...) {
 #' 
 #' NemenyiTest(x~g, d.frm)
 #' 
-NemenyiTest <- function (x, ...)
+NemenyiTest <- function(x, ...) {
   UseMethod("NemenyiTest")
+}
 
-
-NemenyiTest.formula <- function (formula, data, subset, na.action, ...) {
+NemenyiTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
@@ -7347,7 +7781,7 @@ NemenyiTest.formula <- function (formula, data, subset, na.action, ...) {
 
 
 
-NemenyiTest.default <- function (x, g,
+NemenyiTest.default <- function(x, g,
                                  dist = c("tukey", "chisq"), out.list = TRUE, ...) {
 
   if (is.list(x)) {
@@ -7392,7 +7826,7 @@ NemenyiTest.default <- function (x, g,
   tiesadj <- min(1, 1 - sum(tau^3 - tau) / (N^3 - N))
   mrnkdiff <- outer(mrnk, mrnk, "-")
 
-  if(dist == "chisq"){
+  if (dist == "chisq") {
     chi <- mrnkdiff^2 / ((N*(N+1)/12) * outer(1/n, 1/n, "+"))
     pvals <- pchisq(tiesadj * chi, df=k-1, lower.tail=FALSE)
   } else {
@@ -7411,7 +7845,7 @@ NemenyiTest.default <- function (x, g,
   # pvals <- p.adjust(pvals, method=method)
   method.str <- "none" #method
 
-  if(out.list){
+  if (out.list) {
     dnames <- list(NULL, c("mean rank diff", "pval"))
     if (!is.null(nms))
       dnames[[1L]] <- outer(nms, nms, paste, sep = "-")[keep]
@@ -7463,8 +7897,7 @@ NemenyiTest.default <- function (x, g,
 #' @param control the level of the control group against which the others
 #' should be tested. If there are multiple levels the calculation will be
 #' performed for every one.
-#' @param conf.level confidence level of the interval. %% ~~Describe
-#' \code{conf.level} here~~
+#' @param conf.level confidence level of the interval.
 #' @param formula a formula of the form \code{lhs ~ rhs} where \code{lhs} gives
 #' the data values and \code{rhs} the corresponding groups.
 #' @param data an optional matrix or data frame (or similar: see
@@ -7485,13 +7918,20 @@ NemenyiTest.default <- function (x, g,
 #' There are print and plot methods for class \code{"PostHocTest"}. The plot
 #' method does not accept \code{xlab}, \code{ylab} or \code{main} arguments and
 #' creates its own values for each plot.
+#' 
 #' @author Andri Signorell <andri@@signorell.net>, the interface is based on
 #' R-Core code
-#' @seealso \code{\link{PostHocTest}}
-#' @references Dunnett C. W. (1955) A multiple comparison procedure for
+#' 
+#' @seealso 
+#' \code{\link{PostHocTest}}
+#' 
+#' @references 
+#' Dunnett C. W. (1955) A multiple comparison procedure for
 #' comparing several treatments with a control, \emph{Journal of the American
 #' Statistical Association}, 50:1096-1121.
+#' 
 #' @keywords htest
+#'
 #' @examples
 #' 
 #' ## Hollander & Wolfe (1973), 116.
@@ -7519,12 +7959,12 @@ NemenyiTest.default <- function (x, g,
 #' 
 #' DunnettTest(Ozone ~ Month, data = airquality, control="8", conf.level=0.9)
 #' 
-DunnettTest <- function (x, ...)
+DunnettTest <- function(x, ...) {
   UseMethod("DunnettTest")
+}
 
 
-
-DunnettTest.formula <- function (formula, data, subset, na.action, ...) {
+DunnettTest.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
@@ -7547,7 +7987,7 @@ DunnettTest.formula <- function (formula, data, subset, na.action, ...) {
 
 
 
-DunnettTest.default <- function (x, g, control = NULL
+DunnettTest.default <- function(x, g, control = NULL
                                  , conf.level = 0.95, ...) {
 
   if (is.list(x)) {
@@ -7586,7 +8026,7 @@ DunnettTest.default <- function (x, g, control = NULL
   ctrls <- control
   out <- list()
 
-  for(ii in seq_along(ctrls)){
+  for(ii in seq_along(ctrls)) {
 
     control <- ctrls[ii]
 
@@ -7614,7 +8054,7 @@ DunnettTest.default <- function (x, g, control = NULL
     upper <- meandiffs + s * sqrt((1/fittedn) + (1/controln)) * qvt
 
     pval <- c()
-    for (i in 1:(k-1)){
+    for (i in 1:(k-1)) {
       pval[i] <- 1 - mvtnorm::pmvt(-abs(Dj[i]), abs(Dj[i]), corr=R, delta=rep(0, k-1), df=N - k)[1]
     }
 
@@ -7686,22 +8126,33 @@ DunnettTest.default <- function (x, g, control = NULL
 #' @return A list with class 'htest' containing the following components:
 #' \item{statistic }{the value of the T2-statistic. (That is the scaled value
 #' of the statistic that has an F distribution or a chisquare distribution
-#' depending on the value of \code{test}).} \item{parameter}{the degrees of
-#' freedom for the T2-statistic.} \item{p.value}{the p-value for the test.}
+#' depending on the value of \code{test}).}
+#' \item{parameter}{the degrees of
+#' freedom for the T2-statistic.}
+#' \item{p.value}{the p-value for the test.}
 #' \item{null.value}{the specified hypothesized value of the mean or mean
 #' difference depending on whether it was a one-sample test or a two-sample
-#' test.} \item{alternative}{a character string with the value 'two.sided'.}
+#' test.}
+#' \item{alternative}{a character string with the value 'two.sided'.}
 #' \item{method}{a character string indicating what type of test was
-#' performed.} \item{data.name}{a character string giving the name of the data
+#' performed.}
+#' \item{data.name}{a character string giving the name of the data
 #' (and grouping vector).}
-#' @author Klaus Nordhausen, <klaus.nordhausen@@uta.fi>
-#' @references Nordhausen K., Sirkia S., Oja H. and Tyler D. E. (2012)
+#' 
+#' @author 
+#' Klaus Nordhausen, <klaus.nordhausen@@uta.fi>
+#' 
+#' @references
+#' Nordhausen K., Sirkia S., Oja H. and Tyler D. E. (2012)
 #' \emph{ICSNP: Tools for Multivariate Nonparametrics}. R package version
-#' 1.0-9.\cr \url{https://cran.r-project.org/package=ICSNP}
+#' 1.0-9.\cr
+#' \url{https://cran.r-project.org/package=ICSNP}
 #' 
 #' Anderson, T.W. (2003), \emph{An introduction to multivariate analysis}, New
 #' Jersey: Wiley.
+#' 
 #' @keywords htest multivariate
+#'
 #' @examples
 #' 
 #' math.teach <- data.frame(
@@ -7723,7 +8174,7 @@ HotellingsT2Test.default <- function(x, y=NULL, mu=NULL, test="f",...) {
     n <- dim(x)[1]
     p <- dim(x)[2]
 
-    if(is.null(y))     #one sample case
+    if (is.null(y))     #one sample case
     {
       test.statistic <- n*as.numeric(t(colMeans(x)-mu)%*%solve(cov(x))%*%(colMeans(x)-mu))*switch(test,f=(n-p)/(p*(n-1)),chi=1)
       df.1 <- p
@@ -7756,7 +8207,7 @@ HotellingsT2Test.default <- function(x, y=NULL, mu=NULL, test="f",...) {
 
   xok <- complete.cases(x)
   x <- x[xok,]
-  if(!all(sapply(x, is.numeric))) stop("'x' must be numeric")
+  if (!all(sapply(x, is.numeric))) stop("'x' must be numeric")
   x <- as.matrix(x)
 
   p <- dim(x)[2]
@@ -7765,7 +8216,7 @@ HotellingsT2Test.default <- function(x, y=NULL, mu=NULL, test="f",...) {
     yok <- complete.cases(y)
     y <- y[yok,]
 
-    if(!all(sapply(y, is.numeric))) stop("'y' must be numeric")
+    if (!all(sapply(y, is.numeric))) stop("'y' must be numeric")
     if (p!=dim(y)[2]) stop("'x' and 'y' must have the same number of columns")
     y <- as.matrix(y)
   }
@@ -7838,7 +8289,7 @@ HotellingsT2Test.default <- function(x, y=NULL, mu=NULL, test="f",...) {
 }
 
 
-HotellingsT2Test.formula <- function (formula, data, subset, na.action, ...) {
+HotellingsT2Test.formula <- function(formula, data, subset, na.action, ...) {
 
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
@@ -7892,16 +8343,24 @@ HotellingsT2Test.formula <- function (formula, data, subset, na.action, ...) {
 #' goodness of fit test.
 #' @param verbose logical, print intermediate results.
 #' @return A list of tests.
-#' @author Matthias Kohl <Matthias.Kohl@@stamats.de>
-#' @seealso \code{\link{glm}}
-#' @references Lemeshow, S. Hosmer, D.W., (1982): A review of goodness of fit
+#' 
+#' @author 
+#' Matthias Kohl <Matthias.Kohl@@stamats.de>
+#' 
+#' @seealso 
+#' \code{\link{glm}}
+#' 
+#' @references 
+#' Lemeshow, S. Hosmer, D.W., (1982): A review of goodness of fit
 #' statistics for use in the development of logistic regression models.
 #' \emph{American Journal of Epidemiology, \bold{115}(1), 92-106.}
 #' 
 #' Hosmer, D.W., Hosmer, T., le Cessie, S., Lemeshow, S. (1997). A comparison
 #' of goodness-of-fit tests for the logistic regression model.
 #' \emph{Statistics in Medicine}, \bold{16}, 965-980.
+#' 
 #' @keywords univar
+#'
 #' @examples
 #' 
 #' set.seed(111)
@@ -7914,7 +8373,7 @@ HotellingsT2Test.formula <- function (formula, data, subset, na.action, ...) {
 #' 
 #' HosmerLemeshowTest(fit = fitted(fit), obs = obs, X = cbind(x1, x2))
 #' 
-HosmerLemeshowTest <- function (fit, obs, ngr = 10, X, verbose = FALSE){
+HosmerLemeshowTest <- function(fit, obs, ngr = 10, X, verbose = FALSE) {
 
   # woher kommt das?? -> klaeren!
   # - > MKmisc
@@ -7923,11 +8382,11 @@ HosmerLemeshowTest <- function (fit, obs, ngr = 10, X, verbose = FALSE){
   # Hosmer-Lemeshow C statistic
   brks <- unique(quantile(fit, probs = seq(0, 1, by = 1/ngr)))
   cutfit <- cut(fit, breaks = brks, include.lowest = TRUE)
-  if(length(brks) < ngr+1){
+  if (length(brks) < ngr+1) {
     warning("Found only ", length(brks)-1, " different groups for Hosmer-Lemesho C statistic.")
     ngr <- length(brks)-1
   }
-  if(verbose){
+  if (verbose) {
     cat("Groups for Hosmer-Lemeshow C statistic:\n")
     print(table(cutfit))
   }
@@ -7941,7 +8400,7 @@ HosmerLemeshowTest <- function (fit, obs, ngr = 10, X, verbose = FALSE){
 
   # Hosmer-Lemeshow H statistic
   cutfit1 <- cut(fit, breaks = ngr1, include.lowest = TRUE)
-  if(verbose){
+  if (verbose) {
     cat("Groups for Hosmer-Lemeshow H statistic:\n")
     print(table(cutfit1))
   }
@@ -7961,7 +8420,7 @@ HosmerLemeshowTest <- function (fit, obs, ngr = 10, X, verbose = FALSE){
                       observed = Obs1, expected = Exp1), class = "htest")
 
 
-  if(!missing(X)){
+  if (!missing(X)) {
     # le Cessie-van Houwelingen-Copas-Hosmer unweighted sum of squares test for global goodness of fit
     #        X <- cbind(1, X)
     y <- obs == 1
@@ -7979,17 +8438,15 @@ HosmerLemeshowTest <- function (fit, obs, ngr = 10, X, verbose = FALSE){
     stats <- c(sse, ev, sd, z, P)
     names(stats) <- c("Sum of squared errors", "Expected value|H0",
                       "SD", "Z", "P")
-    gof <- structure(list(statistic = z, p.value = P2,
-                          method = "le Cessie-van Houwelingen-Copas-Hosmer global goodness of fit test",
-                          data.name = dname,
-                          observed = sse, expected = ev), class = "htest")
-
+    gof <- structure(list(
+      statistic = z, p.value = P2,
+      method = "le Cessie-van Houwelingen-Copas-Hosmer global goodness of fit test",
+      data.name = dname,
+      observed = sse, expected = ev), class = "htest")
+    
     return(list(C = C, H = H, gof = gof))
   }
 
   list(C = C, H = H)
 }
-
-
-
 
