@@ -76,18 +76,19 @@
 #'
 #' # @export
 TTestA <- function(mx, sx, nx, my = NULL, sy = NULL, ny = NULL,
-                   alternative = c("two.sided", "less", "greater"),
-                   mu = 0, paired = FALSE, var.equal = FALSE, conf.level = 0.95,
-                   ...) {
+  alternative = c("two.sided", "less", "greater"), mu = 0, paired = FALSE, 
+  var.equal = FALSE, conf.level = 0.95, ...) 
+{
+  
   alternative <- match.arg(alternative)
   if (!missing(mu) && (length(mu) != 1 || is.na(mu))) {
     stop("'mu' must be a single number")
   }
   if (!missing(conf.level) && (length(conf.level) != 1 || !is.finite(conf.level) ||
-    conf.level < 0 || conf.level > 1)) {
+      conf.level < 0 || conf.level > 1)) {
     stop("'conf.level' must be a single number between 0 and 1")
   }
-
+  
   if (!is.null(my)) {
     dname <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
   } else {
@@ -96,9 +97,9 @@ TTestA <- function(mx, sx, nx, my = NULL, sy = NULL, ny = NULL,
       stop("'y' is missing for paired test")
     }
   }
-
+  
   vx <- sx^2
-
+  
   if (is.null(my)) {
     if (nx < 2) {
       stop("not enough 'x' observations")
