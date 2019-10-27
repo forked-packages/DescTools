@@ -56,6 +56,7 @@
 #' \item{null.value}{the specified hypothesized value of the mean or mean 
 #'       difference depending on whether it was a one-sample test or a 
 #'       two-sample test.} 
+#' \item{stderr}{the standard error of the mean (difference).}
 #' \item{alternative}{a character string describing the alternative hypothesis.} 
 #' \item{method}{a character string indicating what type of test was performed.} 
 #' \item{data.name}{a character string giving the name(s) of the data.}
@@ -201,8 +202,7 @@ ZTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "gre
 
     stderr <- sqrt(sd_pop^2 * (1/nx + 1/ny))
 
-    if (stderr < 10 * .Machine$double.eps * max(abs(mx),
-                                                abs(my)))
+    if (stderr < 10 * .Machine$double.eps * max(abs(mx), abs(my)))
       stop("data are essentially constant")
     zstat <- (mx - my - mu)/stderr
   }
@@ -227,9 +227,8 @@ ZTest.default <- function(x, y = NULL, alternative = c("two.sided", "less", "gre
   else "mean"
   names(sd_pop) <- "Std. Dev. Population"
   attr(cint, "conf.level") <- conf.level
-  rval <- list(statistic = zstat, p.value = pval,
-               parameter = sd_pop,
-               conf.int = cint, estimate = estimate, null.value = mu,
+  rval <- list(statistic = zstat, parameter = sd_pop, p.value = pval,
+               conf.int = cint, estimate = estimate, null.value = mu, stderr = stderr,
                alternative = alternative, method = method, data.name = dname)
   class(rval) <- "htest"
   return(rval)
