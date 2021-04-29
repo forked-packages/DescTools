@@ -908,8 +908,8 @@ FindCorr <- function(x, cutoff = .90, verbose = FALSE) {
 # }
 
 
-# AUC <- function(x, y, from=min(x, na.rm=TRUE), to = max(x, na.rm=TRUE), 
-#                 method=c("trapezoid", "step", "spline", "linear"), 
+# AUC <- function(x, y, from=min(x, na.rm=TRUE), to = max(x, na.rm=TRUE),
+#                 method=c("trapezoid", "step", "spline", "linear"),
 #                 absolutearea = FALSE, subdivisions = 100, na.rm = FALSE, ...) {
 # 
 #   # calculates Area unter the curve
@@ -934,13 +934,13 @@ FindCorr <- function(x, cutoff = .90, verbose = FALSE) {
 #           , "trapezoid" = { a <- sum((apply( cbind(y[-length(y)], y[-1]), 1, mean))*(x[-1] - x[-length(x)])) }
 #           , "step" = { a <- sum( y[-length(y)] * (x[-1] - x[-length(x)])) }
 #           , "linear" = {
-#                 a <- MESS_auc(x, y, from = from , to = to, type="linear", 
+#                 a <- MESS_auc(x, y, from = from , to = to, type="linear",
 #                                    absolutearea=absolutearea, subdivisions=subdivisions, ...)
 #                        }
-#           , "spline" = { 
-#                 a <- MESS_auc(x, y, from = from , to = to, type="spline", 
+#           , "spline" = {
+#                 a <- MESS_auc(x, y, from = from , to = to, type="spline",
 #                      absolutearea=absolutearea, subdivisions=subdivisions, ...)
-#             # a <- integrate(splinefun(x, y, method="natural"), lower=min(x), upper=max(x))$value 
+#             # a <- integrate(splinefun(x, y, method="natural"), lower=min(x), upper=max(x))$value
 #               }
 #   )
 #   return(a)
@@ -948,18 +948,18 @@ FindCorr <- function(x, cutoff = .90, verbose = FALSE) {
 # 
 # 
 # 
-# MESS_auc <- function(x, y, from = min(x, na.rm=TRUE), to = max(x, na.rm=TRUE), type=c("linear", "spline"), 
+# MESS_auc <- function(x, y, from = min(x, na.rm=TRUE), to = max(x, na.rm=TRUE), type=c("linear", "spline"),
 #                 absolutearea=FALSE, subdivisions =100, ...) {
-#   
+# 
 #   type <- match.arg(type)
-#   
+# 
 #   # Sanity checks
 #   stopifnot(length(x) == length(y))
 #   stopifnot(!is.na(from))
-#   
+# 
 #   if (length(unique(x)) < 2)
 #     return(NA)
-#   
+# 
 #   if (type=="linear") {
 #     ## Default option
 #     if (absolutearea==FALSE) {
@@ -970,119 +970,122 @@ FindCorr <- function(x, cutoff = .90, verbose = FALSE) {
 #       o <- order(x)
 #       ox <- x[o]
 #       oy <- y[o]
-#       
+# 
 #       idx <- which(diff(oy >= 0)!=0)
 #       newx <- c(x, x[idx] - oy[idx]*(x[idx+1]-x[idx]) / (y[idx+1]-y[idx]))
 #       newy <- c(y, rep(0, length(idx)))
 #       values <- approx(newx, newy, xout = sort(unique(c(from, to, newx[newx > from & newx < to]))), ...)
 #       res <- 0.5 * sum(diff(values$x) * (abs(values$y[-1]) + abs(values$y[-length(values$y)])))
 #     }
-#     
+# 
 #   } else { ## If it is not a linear approximation
 #     if (absolutearea)
 #       myfunction <- function(z) { abs(splinefun(x, y, method="natural")(z)) }
-#     
+# 
 #     else
 #       myfunction <- splinefun(x, y, method="natural")
-#     
+# 
 #     res <- integrate(myfunction, lower=from, upper=to, subdivisions=subdivisions)$value
-#     
+# 
 #   }
-#   
+# 
 #   res
-#   
+# 
 # }
 # 
 
 
-AUC <- function(x, y, from = min(x, na.rm=TRUE), to = max(x, na.rm=TRUE), 
-                method=c("trapezoid", "step", "spline"), absolutearea = FALSE, 
+
+# New version, publish as soon as package sobir is updated
+
+AUC <- function(x, y, from = min(x, na.rm=TRUE), to = max(x, na.rm=TRUE),
+                method=c("trapezoid", "step", "spline"), absolutearea = FALSE,
                 subdivisions = 100,  na.rm = FALSE, ...)  {
-  
-  
+
+
   # calculates Area unter the curve
   # example:
   #   AUC( x=c(1,2,3,5), y=c(0,1,1,2))
   #   AUC( x=c(2,3,4,5), y=c(0,1,1,2))
-  
+
   if(na.rm) {
     idx <- na.omit(cbind(x,y))
     x <- x[idx]
     y <- y[idx]
   }
-  
+
   if (length(x) != length(y))
     stop("length x must equal length y")
-  
+
   if (length(x) < 2)
     return(NA)
-  
+
   o <- order(x)
   x <- x[o]
   y <- y[o]
 
   ox <- x[o]
   oy <- y[o]
-  
+
   method <- match.arg(method)
-  
+
   if (method=="trapezoid") {
-    
+
     # easy and short
     # , "trapezoid" = { a <- sum((apply( cbind(y[-length(y)], y[-1]), 1, mean))*(x[-1] - x[-length(x)])) }
-    
+
     ## Default option
     if (!absolutearea) {
       values <- approx(x, y, xout = sort(unique(c(from, to, x[x > from & x < to]))), ...)
       res <- 0.5 * sum(diff(values$x) * (values$y[-1] + values$y[-length(values$y)]))
-      
+
     } else { ## Absolute areas
-      
+
       idx <- which(diff(oy >= 0)!=0)
       newx <- c(x, x[idx] - oy[idx]*(x[idx+1]-x[idx]) / (y[idx+1]-y[idx]))
       newy <- c(y, rep(0, length(idx)))
       values <- approx(newx, newy, xout = sort(unique(c(from, to, newx[newx > from & newx < to]))), ...)
-      
+
       res <- 0.5 * sum(diff(values$x) * (abs(values$y[-1]) + abs(values$y[-length(values$y)])))
-      
+
     }
-    
+
   } else if (method=="step") {
-    
+
     # easy and short
     # , "step" = { a <- sum( y[-length(y)] * (x[-1] - x[-length(x)])) }
-    
+
     ## Default option
     if (!absolutearea) {
       values <- approx(x, y, xout = sort(unique(c(from, to, x[x > from & x < to]))), ...)
-      
+
       res <- sum(diff(values$x) * values$y[-length(values$y)])
-      # res <- sum( y[-length(y)] * (x[-1] - x[-length(x)])) 
-      
+      # res <- sum( y[-length(y)] * (x[-1] - x[-length(x)]))
+
     } else { ## Absolute areas
-      
+
       idx <- which(diff(oy >= 0)!=0)
       newx <- c(x, x[idx] - oy[idx]*(x[idx+1]-x[idx]) / (y[idx+1]-y[idx]))
       newy <- c(y, rep(0, length(idx)))
       values <- approx(newx, newy, xout = sort(unique(c(from, to, newx[newx > from & newx < to]))), ...)
-      
+
       res <- sum(diff(values$x) * abs(values$y[-length(values$y)]))
-      
+
     }
-    
-  } else if (method=="spline") { 
-    
+
+  } else if (method=="spline") {
+
     if (absolutearea)
       myfunction <- function(z) { abs(splinefun(x, y, method="natural")(z)) }
     else
       myfunction <- splinefun(x, y, method="natural")
-    
+
     res <- integrate(myfunction, lower=from, upper=to, subdivisions=subdivisions)$value
-    
+
   }
-  
+
   return(res)
-  
+
 }
 
 
@@ -3719,8 +3722,9 @@ MedianCI <- function(x, conf.level=0.95, sides = c("two.sided","left","right"), 
   
   
   sides <- match.arg(sides, choices = c("two.sided","left","right"), several.ok = FALSE)
-  if(sides!="two.sided")
-    conf.level <- 1 - 2*(1-conf.level)
+  
+  # if(sides!="two.sided")
+  #   conf.level <- 1 - 2*(1-conf.level)
 
   # alte Version, ziemlich grosse Unterschiede zu wilcox.test:
   # Bosch: Formelsammlung Statistik (bei Markus Naepflin), S. 95
@@ -3738,13 +3742,17 @@ MedianCI <- function(x, conf.level=0.95, sides = c("two.sided","left","right"), 
             r <- MedianCI_Binom(x, conf.level = conf.level, sides=sides)
           }
           , "boot" = {
-            boot.med <- boot(x, function(x, d) median(x[d], na.rm=na.rm), R=R)
-            r <- boot.ci(boot.med, conf=conf.level, type="basic")[[4]][4:5]
+            if(sides!="two.sided")
+               conf.level <- 1 - 2*(1-conf.level)
+              
+              boot.med <- boot(x, function(x, d) median(x[d], na.rm=na.rm), R=R)
+              r <- boot.ci(boot.med, conf=conf.level, type="basic")[[4]][4:5]
           } )
 
   med <- median(x, na.rm=na.rm)
   if(is.na(med)) {   # do not report a CI if the median is not defined...
     res <- rep(NA, 3)
+    
   } else {
     res <- c(median=med, r)
     # report the conf.level which can deviate from the required one
@@ -3768,45 +3776,69 @@ MedianCI <- function(x, conf.level=0.95, sides = c("two.sided","left","right"), 
 QuantileCI <- function(x, probs=seq(0, 1, .25), conf.level = 0.95, sides = c("two.sided", "left", "right"),
            na.rm = FALSE, method = c("exact", "boot"), R = 999) {
   
-  .QuantileCI <- function(x, probs, conf.level = 0.95, sides = c("two.sided", "left", "right")) {
+  .QuantileCI <- function(x, prob, conf.level = 0.95, sides = c("two.sided", "left", "right")) {
     # Near-symmetric distribution-free confidence interval for a quantile `q`.
   
     # https://stats.stackexchange.com/questions/99829/how-to-obtain-a-confidence-interval-for-a-percentile
-    #
+
     # Search over a small range of upper and lower order statistics for the 
     # closest coverage to 1-alpha (but not less than it, if possible).
     
+    n <- length(x)
     alpha <- 1- conf.level
     
-    n <- length(x)
     
-    u <- qbinom(1-alpha/2, n, probs) + (-2:2) + 1
-    l <- qbinom(alpha/2, n, probs) + (-2:2)
-    u[u > n] <- Inf
-    l[l < 0] <- -Inf
-    coverage <- outer(l, u, function(a, b) pbinom(b-1, n, probs) - pbinom(a-1, n, probs))
-    if (max(coverage) < 1-alpha) i <- which(coverage==max(coverage)) else
-      i <- which(coverage == min(coverage[coverage >= 1-alpha]))
-    # minimal difference
-    i <- i[1]
-    
-    # order statistics and the actual coverage
-    u <- rep(u, each=5)[i]
-    l <- rep(l, 5)[i]
-    
+    if(sides == "two.sided"){
+
+      u <- qbinom(p = 1-alpha/2, size = n, prob = prob) + (-2:2) + 1
+      l <- qbinom(p = alpha/2, size = n, prob = prob) + (-2:2)
+      
+      u[u > n] <- Inf
+      l[l < 0] <- -Inf
+      
+      coverage <- outer(l, u, function(a,b) pbinom(b-1, n, prob = prob) - pbinom(a-1, n, prob=prob))
+      
+      if (max(coverage) < 1-alpha) i <- which(coverage==max(coverage)) else
+        i <- which(coverage == min(coverage[coverage >= 1-alpha]))
+      
+      # minimal difference
+      i <- i[1]
+      
+      # order statistics and the actual coverage.
+      u <- rep(u, each=5)[i]
+      l <- rep(l, 5)[i]
+      
+      coverage <- coverage[i]
+
+    } else if(sides == "left"){
+      
+      l <- qbinom(p = alpha, size = n, prob = prob)
+      u <- Inf
+      
+      coverage <- 1 - pbinom(q = l-1, size = n, prob = prob)
+
+    } else if(sides == "right"){
+      
+      l <- -Inf
+      u <- qbinom(p = 1-alpha, size = n, prob = prob)
+      
+      coverage <- pbinom(q = u, size = n, prob = prob)
+
+    } 
+
     # get the values  
-    if(probs %nin% c(0,1))
-      s <- sort(x, partial=c(u, l))
+    if(prob %nin% c(0,1))
+      s <- sort(x, partial= c(u, l)[is.finite(c(u, l))])
     else
       s <- sort(x)
     
     res <- c(lwr.ci=s[l], upr.ci=s[u])
-    attr(res, "conf.level") <- coverage[i]
+    attr(res, "conf.level") <- coverage
     
     if(sides=="left")
-      res[3] <- Inf
+      res[2] <- Inf
     else if(sides=="right")
-      res[2] <- -Inf
+      res[1] <- -Inf
     
     return(res)
     
@@ -3818,21 +3850,26 @@ QuantileCI <- function(x, probs=seq(0, 1, .25), conf.level = 0.95, sides = c("tw
     stop("missing values and NaN's not allowed if 'na.rm' is FALSE")
   
   sides <- match.arg(sides, choices = c("two.sided","left","right"), several.ok = FALSE)
-  if(sides!="two.sided")
-    conf.level <- 1 - 2*(1-conf.level)
 
   method <- match.arg(arg=method, choices=c("exact","boot"))
   
   switch( method
           , "exact" = { # this is the SAS-way to do it
-            r <- lapply(probs, function(p) .QuantileCI(x, probs=p, conf.level = conf.level, sides=sides))
+            r <- lapply(probs, function(p) .QuantileCI(x, prob=p, conf.level = conf.level, sides=sides))
             coverage <- sapply(r, function(z) attr(z, "conf.level"))
             r <- do.call(rbind, r)
             attr(r, "conf.level") <- coverage
           }
           , "boot" = {
-            boot.med <- boot(x, function(x, d) quantile(x[d], probs=probs, na.rm=na.rm), R=R)
-            r <- boot.ci(boot.med, conf=conf.level, type="basic")[[4]][4:5]
+            
+            if(sides!="two.sided")
+              conf.level <- 1 - 2*(1-conf.level)
+            
+            r <- t(sapply(probs, 
+                     function(p) {
+                       boot.med <- boot(x, function(x, d) quantile(x[d], probs=p, na.rm=na.rm), R=R)
+                       boot.ci(boot.med, conf=conf.level, type="basic")[[4]][4:5]
+                     }))
           } )
   
   qq <- quantile(x, probs=probs, na.rm=na.rm)

@@ -83,7 +83,29 @@ lines(x=c(1,2,2.5), y=c(1,2,4), type="s", col="red")
 
 x <- seq(0, pi, length.out=200)
 AUC(x=x, y=sin(x)) 
-AUC(x=x, y=sin(x), method="spline") 
+AUC(x=x, y=sin(x), method="spline")
+
+
+# absolute areas also for "trapezoid"
+x <- c(1, 2, 3, 4, 5)
+y <- c(1,-1,-2, 2, 3)
+
+plot(x, y, type="l")
+abline(h=0)
+polygon(x=c(1, 1.5, 1), y=c(0, 0, 1), col="blue", density = 20)
+polygon(x=c(1.5, 2, 2, 1.5), y=c(0, -1, 0, 0), col="red", density = 20)
+polygon(x=c(2, 2, 3, 3), y=c(0, -1, -2, 0), col="red", density = 20)
+polygon(x=c(3, 3, 3.5, 3.5), y=c(0,-2, 0,0), col="red", density = 20)
+polygon(x=c(3.5, 4, 4, 3.5), y=c(0,0, 2,0), col="blue", density = 20)
+polygon(x=c(4, 5, 5, 4), y=c(0,0, 3,2), col="blue", density = 20)
+
+AUC(x, y, absolutearea = FALSE)
+# is the same as:
+0.5*1/2 - 0.5*1*.5 - 1 *1.5 - 2*0.5*.5 + 0.5 * 2 *.5 + 1 * 2.5
+
+AUC(x, y, absolutearea = TRUE)
+# is the same as:
+0.5*1/2 + 0.5*1*.5 + 1 *1.5 + 2*0.5*.5 + 0.5 * 2 *.5 + 1 * 2.5
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
